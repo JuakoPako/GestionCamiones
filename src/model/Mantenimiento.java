@@ -1,0 +1,73 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package model;
+
+import java.util.Date;
+
+
+public class Mantenimiento {
+
+private int idMantenimiento;
+private int idCamion;
+private Date fecha;
+private String tipo;
+private String descripcion;
+
+    public Mantenimiento() {
+    }
+
+    public Mantenimiento(int idMantenimiento, int idCamion, Date fecha, String tipo, String descripcion) {
+        this.idMantenimiento = idMantenimiento;
+        this.idCamion = idCamion;
+        this.fecha = fecha;
+        this.tipo = tipo;
+        this.descripcion = descripcion;
+    }
+
+    public int getIdMantenimiento() {
+        return idMantenimiento;
+    }
+
+    public void setIdMantenimiento(int idMantenimiento) {
+        this.idMantenimiento = idMantenimiento;
+    }
+
+    public int getIdCamion() {
+        return idCamion;
+    }
+
+    public void setIdCamion(int idCamion) {
+        this.idCamion = idCamion;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+    
+    
+
+
+
+}

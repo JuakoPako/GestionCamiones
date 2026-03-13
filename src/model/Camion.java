@@ -9,21 +9,26 @@ package model;
  * @author bevod
  */
 public class Camion {
+
     private int idCamion;
+    private String patenteCamion;
     private String marca;
     private String modelo;
     private int anio;
     private int kilometraje;
+    private int idConductor;
 
     public Camion() {
     }
 
-    public Camion(int idCamion, String marca, String modelo, int anio, int kilometraje) {
+    public Camion(int idCamion, String patenteCamion, String marca, String modelo, int anio, int kilometraje, int idConductor) {
         this.idCamion = idCamion;
+        this.patenteCamion = patenteCamion;
         this.marca = marca;
         this.modelo = modelo;
         this.anio = anio;
         this.kilometraje = kilometraje;
+        this.idConductor = idConductor;
     }
 
     public int getIdCamion() {
@@ -32,6 +37,14 @@ public class Camion {
 
     public void setIdCamion(int idCamion) {
         this.idCamion = idCamion;
+    }
+
+    public String getPatenteCamion() {
+        return patenteCamion;
+    }
+
+    public void setPatenteCamion(String patenteCamion) {
+        this.patenteCamion = patenteCamion;
     }
 
     public String getMarca() {
@@ -65,7 +78,12 @@ public class Camion {
     public void setKilometraje(int kilometraje) {
         this.kilometraje = kilometraje;
     }
-    
-    
+
+    public int getIdConductor() {
+        return idConductor;
+    }
+
+    public void setIdConductor(int idConductor) {
+        this.idConductor = idConductor;
+    }
 }
-    

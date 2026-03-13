@@ -14,16 +14,18 @@ private int idCamion;
 private Date fecha;
 private String tipo;
 private String descripcion;
+private int kilometraje;
 
     public Mantenimiento() {
     }
 
-    public Mantenimiento(int idMantenimiento, int idCamion, Date fecha, String tipo, String descripcion) {
+    public Mantenimiento(int idMantenimiento, int idCamion, Date fecha, String tipo, String descripcion, int kilometraje) {
         this.idMantenimiento = idMantenimiento;
         this.idCamion = idCamion;
         this.fecha = fecha;
         this.tipo = tipo;
         this.descripcion = descripcion;
+        this.kilometraje = kilometraje;
     }
 
     public int getIdMantenimiento() {
@@ -65,6 +67,16 @@ private String descripcion;
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+    public int getKilometraje() {
+        return kilometraje;
+    }
+
+    public void setKilometraje(int kilometraje) {
+        this.kilometraje = kilometraje;
+    }
+    
+    
     
     
 

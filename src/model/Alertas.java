@@ -10,53 +10,63 @@ import java.util.Date;
  *
  * @author Franco
  */
+
 public class Alertas {
+
     private int idAlerta;
     private int idCamion;
     private Date fechaAlerta;
     private String tipoAlerta;
-    
-    public Alertas (){
-        
+    private boolean atendida;
+
+    public Alertas() {
     }
 
-    public Alertas(int idAlerta, int idCamion, Date fechaAlerta, String tipoAlerta) {
+    public Alertas(int idAlerta, int idCamion, Date fechaAlerta, String tipoAlerta, boolean atendida) {
         this.idAlerta = idAlerta;
         this.idCamion = idCamion;
         this.fechaAlerta = fechaAlerta;
         this.tipoAlerta = tipoAlerta;
+        this.atendida = atendida;
     }
 
     public int getIdAlerta() {
         return idAlerta;
     }
 
-    public int getIdCamion() {
-        return idCamion;
-    }
-
-    public Date getFechaAlerta() {
-        return fechaAlerta;
-    }
-
-    public String getTipoAlerta() {
-        return tipoAlerta;
-    }
-
     public void setIdAlerta(int idAlerta) {
         this.idAlerta = idAlerta;
+    }
+
+    public int getIdCamion() {
+        return idCamion;
     }
 
     public void setIdCamion(int idCamion) {
         this.idCamion = idCamion;
     }
 
+    public Date getFechaAlerta() {
+        return fechaAlerta;
+    }
+
     public void setFechaAlerta(Date fechaAlerta) {
         this.fechaAlerta = fechaAlerta;
+    }
+
+    public String getTipoAlerta() {
+        return tipoAlerta;
     }
 
     public void setTipoAlerta(String tipoAlerta) {
         this.tipoAlerta = tipoAlerta;
     }
-    
+
+    public boolean isAtendida() {
+        return atendida;
+    }
+
+    public void setAtendida(boolean atendida) {
+        this.atendida = atendida;
+    }
 }

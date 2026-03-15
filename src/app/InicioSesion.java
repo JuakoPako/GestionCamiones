@@ -10,17 +10,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.Usuario;
+import app.MenuPrincipal;
 
 /**
  *
  * @author bevod
  */
-public class Login extends javax.swing.JFrame {
+public class InicioSesion extends javax.swing.JFrame {
 
     /**
      * Creates new form Login
      */
-    public Login() {
+    public InicioSesion() {
         initComponents();
     }
 
@@ -95,36 +96,28 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-        
+
         try {
             String usuario = txtUsuario.getText();
             String password = new String(pswContra.getPassword());
-            
+
             DAOUsuario dao = new DAOUsuario();
             Usuario u = dao.login(usuario, password);
-            
-            
+
             if (u != null) {
                 JOptionPane.showMessageDialog(this, "Bienvenido " + u.getNombre());
-                
-                
-                
-            }
-            
-            else {
+                MenuPrincipal menu = new MenuPrincipal();
+                menu.setVisible(true);
+                this.dispose();
+            } else {
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
             }
-            
-            
-            
-            
+
         } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
-        
+
+
     }//GEN-LAST:event_btnEntrarActionPerformed
 
     /**
@@ -144,20 +137,21 @@ public class Login extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InicioSesion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InicioSesion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InicioSesion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InicioSesion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Login().setVisible(true);
+                new InicioSesion().setVisible(true);
             }
         });
     }

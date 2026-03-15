@@ -24,7 +24,7 @@ public class DAOUsuario {
      Genera la conexion entregando los datos
      */
     public DAOUsuario() throws SQLException {
-        oConexion = new Conexion("localhost", "gestion_camiones", "root", "");
+        oConexion = new Conexion("localhost", "gestion_camiones", "root", "1997");
     }
 
     public void crearUsuario(Usuario oUsuario) throws SQLException {
@@ -39,10 +39,10 @@ public class DAOUsuario {
 
     }
 
-    public Usuario login(String usuario, String password) throws SQLException {
+    public Usuario login(String correo, String password) throws SQLException {
 
-        String sql = "SELECT * FROM usuario WHERE nombre='"
-                + usuario + "' AND password='" + password + "';";
+        String sql = "SELECT * FROM usuario WHERE correo='"
+                + correo + "' AND password='" + password + "';";
 
         oConexion.rs = oConexion.ejecutarSelect(sql);
 

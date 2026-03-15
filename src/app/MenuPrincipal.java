@@ -41,6 +41,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         btnGestionUsuarios.setText("Gestion Usuarios");
 
         btnGestionCamiones.setText("Gestion Camiones");
+        btnGestionCamiones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGestionCamionesActionPerformed(evt);
+            }
+        });
 
         btnMantenimiento.setText("Mantenimiento");
         btnMantenimiento.addActionListener(new java.awt.event.ActionListener() {
@@ -103,6 +108,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private void btnMantenimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMantenimientoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnMantenimientoActionPerformed
+
+    private void btnGestionCamionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionCamionesActionPerformed
+        GestionCamiones gestionCamiones = new GestionCamiones();
+        gestionCamiones.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnGestionCamionesActionPerformed
 
     /**
      * @param args the command line arguments

@@ -98,11 +98,11 @@ public class InicioSesion extends javax.swing.JFrame {
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
 
         try {
-            String usuario = txtUsuario.getText();
+            String nombre = txtUsuario.getText();
             String password = new String(pswContra.getPassword());
 
             DAOUsuario dao = new DAOUsuario();
-            Usuario u = dao.login(usuario, password);
+            Usuario u = dao.login(nombre, password);
 
             if (u != null) {
                 JOptionPane.showMessageDialog(this, "Bienvenido " + u.getNombre());

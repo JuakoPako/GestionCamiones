@@ -18,7 +18,7 @@ public class DAOCamion {
     private Conexion oConexion;
 
     public DAOCamion() throws SQLException {
-        oConexion = new Conexion("localhost", "gestion_camiones", "root", "1997");
+        oConexion = new Conexion("localhost", "gestion_camiones", "root", "");
     }
 
     public void crearCamion(Camion oCamion) throws SQLException {
@@ -111,5 +111,39 @@ public class DAOCamion {
         }
         oConexion.rs.close();
         return null;
+    }
+
+    public ArrayList<Camion> getListaCamiones() throws SQLException {
+
+        ArrayList<Camion> listaCamion = new ArrayList<>();
+
+        String sql = "SELECT camion.id, camion.patente, camion.marca, camion.modelo, camion.anio, camion.kilometraje, camion.id_conductor FROM camion;";
+
+        oConexion.ejecutarSelect(sql);
+
+        while (oConexion.rs.next()) {
+
+            Camion c = new Camion();
+
+            c.setIdCamion(oConexion.rs.getInt(1));
+            c.setPatenteCamion(oConexion.rs.getString(2));
+            c.setMarca(oConexion.rs.getString(3));
+            c.setModelo(oConexion.rs.getString(4));
+            c.setAnio(oConexion.rs.getInt(5));
+            c.setKilometraje(oConexion.rs.getInt(6));
+            c.setIdConductor(oConexion.rs.getInt(7));
+
+            listaCamion.add(c);
+        }
+
+        oConexion.rs.close();
+
+        return listaCamion;
+    }
+    
+    public void borrarCamion(int id) throws SQLException {
+        String sql = "DELETE FROM camion where id =" + id + ";";
+        oConexion.ejecutar(sql);
+        System.out.println(sql);
     }
 }

@@ -64,6 +64,11 @@ public class GestionCamiones extends javax.swing.JFrame {
         });
 
         btnEliminarCamion.setText("Eliminar Camion");
+        btnEliminarCamion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarCamionActionPerformed(evt);
+            }
+        });
 
         btnCerrarSesion.setText("Volver");
         btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
@@ -138,6 +143,12 @@ public class GestionCamiones extends javax.swing.JFrame {
     private void btnVerCamionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnVerCamionesMouseClicked
         
     }//GEN-LAST:event_btnVerCamionesMouseClicked
+
+    private void btnEliminarCamionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCamionActionPerformed
+        EliminarCamion eliminarCamion = new EliminarCamion();
+        eliminarCamion.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnEliminarCamionActionPerformed
 
     /**
      * @param args the command line arguments

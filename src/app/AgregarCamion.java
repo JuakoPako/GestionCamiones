@@ -125,39 +125,128 @@ public class AgregarCamion extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    private boolean validarFormulario() {
+        String patente = txtPatente.getText().trim().toUpperCase();
+        String marca = txtMarca.getText().trim();
+        String modelo = txtModelo.getText().trim();
+        String anioStr = txtAno.getText().trim();
+        String kmStr = txtKilometraje.getText().trim();
+
+        if (patente.isEmpty()) {
+            mostrarError(txtPatente, "La patente es obligatoria");
+            return false;
+        }
+        if (!patente.matches("^[A-Z0-9-]{4,8}$")) {
+            mostrarError(txtPatente, "Patente inválida (solo letras, números y guión, 4-8 caracteres)");
+            return false;
+        }
+
+        if (marca.length() > 50) {
+            mostrarError(txtMarca, "Marca demasiado larga (máx. 50 caracteres)");
+            return false;
+        }
+        if (modelo.length() > 50) {
+            mostrarError(txtModelo, "Modelo demasiado largo (máx. 50 caracteres)");
+            return false;
+        }
+
+        if (anioStr.isEmpty()) {
+            mostrarError(txtAno, "El año es obligatorio");
+            return false;
+        }
+        int anio;
+        try {
+            anio = Integer.parseInt(anioStr);
+        } catch (NumberFormatException e) {
+            mostrarError(txtAno, "Año debe ser un número entero");
+            return false;
+        }
+        int anioActual = java.time.Year.now().getValue();
+        if (anio < 1900 || anio > anioActual + 1) {
+            mostrarError(txtAno, "Año fuera de rango (" + 1900 + " - " + (anioActual + 1) + ")");
+            return false;
+        }
+
+        if (kmStr.isEmpty()) {
+            mostrarError(txtKilometraje, "El kilometraje es obligatorio");
+            return false;
+        }
+        int km;
+        try {
+            km = Integer.parseInt(kmStr);
+        } catch (NumberFormatException e) {
+            mostrarError(txtKilometraje, "Kilometraje debe ser un número entero");
+            return false;
+        }
+        if (km < 0) {
+            mostrarError(txtKilometraje, "Kilometraje no puede ser negativo");
+            return false;
+        }
+
+        // Si todo OK, limpiar errores visuales
+        limpiarErrores();
+        return true;
+    }
+
+    private void mostrarError(javax.swing.JComponent campo, String mensaje) {
+        campo.setToolTipText(mensaje);
+        campo.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.RED));
+        campo.requestFocus();
+    }
+
+    private void limpiarErrores() {
+        javax.swing.border.Border defaultBorder = javax.swing.BorderFactory.createLineBorder(java.awt.Color.GRAY);
+        txtPatente.setBorder(defaultBorder);
+        txtPatente.setToolTipText(null);
+        txtMarca.setBorder(defaultBorder);
+        txtMarca.setToolTipText(null);
+        txtModelo.setBorder(defaultBorder);
+        txtModelo.setToolTipText(null);
+        txtAno.setBorder(defaultBorder);
+        txtAno.setToolTipText(null);
+        txtKilometraje.setBorder(defaultBorder);
+        txtKilometraje.setToolTipText(null);
+    }
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
         try {
-            String Patente = txtPatente.getText();
-            String Marca = txtMarca.getText();
-            String Modelo = txtModelo.getText();
-            int Anio = Integer.parseInt(txtAno.getText());
-            int Kilometraje = Integer.parseInt(txtKilometraje.getText());
-            
+            if (!validarFormulario()) {
+                return;
+            }
+            String Patente = txtPatente.getText().trim().toUpperCase();
+            String Marca = txtMarca.getText().trim();
+            String Modelo = txtModelo.getText().trim();
+            int Anio = Integer.parseInt(txtAno.getText().trim());
+            int Kilometraje = Integer.parseInt(txtKilometraje.getText().trim());
+
             DAOCamion oDAOCamion = new DAOCamion();
+
+            if (oDAOCamion.patenteExiste(Patente)) {
+                JOptionPane.showMessageDialog(this, "La patente ya está registrada en la base de datos.", "Patente duplicada", JOptionPane.WARNING_MESSAGE);
+                txtPatente.requestFocus();
+                return;
+            }
             
             Camion nuevoCamion = new Camion();
-            
             nuevoCamion.setPatenteCamion(Patente);
             nuevoCamion.setMarca(Marca);
             nuevoCamion.setModelo(Modelo);
             nuevoCamion.setAnio(Anio);
             nuevoCamion.setKilometraje(Kilometraje);
-            
+
             oDAOCamion.crearCamion(nuevoCamion);
-            
+
             JOptionPane.showMessageDialog(this, "Camion Agregado Correctamente!");
-            
+
             GestionCamiones gestionCamiones = new GestionCamiones();
             gestionCamiones.setVisible(true);
             this.dispose();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(AgregarCamion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
+
+
     }//GEN-LAST:event_btnOkActionPerformed
 
     /**

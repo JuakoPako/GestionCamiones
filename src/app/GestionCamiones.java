@@ -45,6 +45,11 @@ public class GestionCamiones extends javax.swing.JFrame {
         });
 
         btnVerCamiones.setText("Ver Camiones");
+        btnVerCamiones.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnVerCamionesMouseClicked(evt);
+            }
+        });
         btnVerCamiones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVerCamionesActionPerformed(evt);
@@ -109,7 +114,9 @@ public class GestionCamiones extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVerCamionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerCamionesActionPerformed
-
+        VerCamiones verCamiones = new VerCamiones();
+        verCamiones.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnVerCamionesActionPerformed
 
     private void btnActualizarCamionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarCamionActionPerformed
@@ -127,6 +134,10 @@ public class GestionCamiones extends javax.swing.JFrame {
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
+    private void btnVerCamionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnVerCamionesMouseClicked
+        
+    }//GEN-LAST:event_btnVerCamionesMouseClicked
 
     /**
      * @param args the command line arguments

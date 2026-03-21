@@ -4,7 +4,7 @@
  */
 package bd;
 
-import java.awt.List;
+import java.util.List;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Camion;
@@ -50,25 +50,47 @@ public class DAOCamion {
         if (filtro == null) {
             filtro = "";
         }
+        // Normalizar filtro para búsqueda parcial
+        String like = "%" + filtro + "%";
+
+        // Construir SQL concatenado (estilo actual del proyecto)
         String sql = "SELECT c.id, c.patente, c.marca, c.modelo, c.anio, c.kilometraje, c.id_conductor, u.nombre AS nombre_conductor "
                 + "FROM Camion c LEFT JOIN Usuario u ON c.id_conductor = u.id "
-                + "WHERE c.patente LIKE '%" + filtro + "%' OR c.id LIKE '%" + filtro + "%' "
+                + "WHERE c.patente LIKE '" + like + "' OR c.id LIKE '" + like + "' "
                 + "ORDER BY c.patente;";
 
+        // Ejecutar y mapear resultados
         oConexion.rs = oConexion.ejecutarSelect(sql);
-
-        while (oConexion.rs.next()) {
-            Camion c = new Camion();
-            c.setIdCamion(oConexion.rs.getInt("id"));
-            c.setPatenteCamion(oConexion.rs.getString("patente"));
-            c.setMarca(oConexion.rs.getString("marca"));
-            c.setModelo(oConexion.rs.getString("modelo"));
-            c.setAnio(oConexion.rs.getInt("anio"));
-            c.setKilometraje(oConexion.rs.getInt("kilometraje"));
-            // si tu modelo tiene campo idConductor y nombreConductor
-            lista.add(c);
+        try {
+            while (oConexion.rs.next()) {
+                Camion c = new Camion();
+                c.setIdCamion(oConexion.rs.getInt("id"));
+                c.setPatenteCamion(oConexion.rs.getString("patente"));
+                c.setMarca(oConexion.rs.getString("marca"));
+                c.setModelo(oConexion.rs.getString("modelo"));
+                c.setAnio(oConexion.rs.getInt("anio"));
+                c.setKilometraje(oConexion.rs.getInt("kilometraje"));
+                // id_conductor puede ser NULL en la BD; getInt devuelve 0 si es NULL,
+                // si necesitas distinguir NULL usa rs.wasNull() después de getInt
+                int idConductor = oConexion.rs.getInt("id_conductor");
+                if (oConexion.rs.wasNull()) {
+                    c.setIdConductor(0); // o el valor que uses para "sin conductor"
+                } else {
+                    c.setIdConductor(idConductor);
+                }
+                lista.add(c);
+            }
+        } finally {
+            // Cerrar ResultSet para liberar recursos
+            if (oConexion.rs != null) {
+                try {
+                    oConexion.rs.close();
+                } catch (SQLException e) {
+                    /* log si quieres */ }
+                oConexion.rs = null;
+            }
         }
-        oConexion.rs.close();
+
         return lista;
     }
 

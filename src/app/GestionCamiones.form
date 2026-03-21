@@ -85,6 +85,7 @@
         <Property name="text" type="java.lang.String" value="Ver Camiones"/>
       </Properties>
       <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnVerCamionesMouseClicked"/>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVerCamionesActionPerformed"/>
       </Events>
     </Component>

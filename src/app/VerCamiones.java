@@ -45,13 +45,13 @@ public class VerCamiones extends javax.swing.JFrame {
 
         tblTablaCamiones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "", "", "", "", "", "", ""
             }
         ));
         jScrollPane1.setViewportView(tblTablaCamiones);
@@ -70,14 +70,14 @@ public class VerCamiones extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtBuscarPatente, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnBuscar)))
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,7 +156,7 @@ public class VerCamiones extends javax.swing.JFrame {
 
         try {
             DAOCamion dao = new DAOCamion();
-            List<Camion> lista = (List<Camion>) dao.getCamiones(filtro); // debe existir getCamiones(String)
+            List<Camion> lista = dao.getCamiones(filtro);
 
             if (lista.isEmpty()) {
                 tblTablaCamiones.setModel(model);
@@ -171,15 +171,16 @@ public class VerCamiones extends javax.swing.JFrame {
                     c.getMarca(),
                     c.getModelo(),
                     c.getAnio(),
-                    c.getKilometraje(),};
+                    c.getKilometraje(),
+                };
                 model.addRow(fila);
             }
 
+            tblTablaCamiones.setModel(model); //
+            tblTablaCamiones.setAutoCreateRowSorter(true);
+
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this,
-                    "Error al cargar camiones: " + ex.getMessage(),
-                    "Error BD",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error al cargar camiones: " + ex.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
         }
     }
 

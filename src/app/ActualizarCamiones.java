@@ -4,6 +4,10 @@
  */
 package app;
 
+import bd.DAOCamion;
+import java.sql.SQLException;
+import java.util.List;
+
 /**
  *
  * @author Franco
@@ -28,28 +32,28 @@ public class ActualizarCamiones extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        tblDatosCamion = new javax.swing.JTable();
+        txtBuscarEntrada = new javax.swing.JTextField();
+        btnBuscar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtPatenteEntrada = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtMarcaEntrada = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        txtAñoEntrada = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        txtKilometroajeEntrada = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        txtModeloEntrada = new javax.swing.JTextField();
+        btnGuardar = new javax.swing.JButton();
+        btnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Ingrese la patente del camion:");
+        jLabel1.setText("Ingrese la ID del camion:");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblDatosCamion.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
@@ -60,15 +64,20 @@ public class ActualizarCamiones extends javax.swing.JFrame {
                 "", "", "", "", "", "", ""
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblDatosCamion);
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtBuscarEntrada.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtBuscarEntradaActionPerformed(evt);
             }
         });
 
-        jButton1.setText("Buscar");
+        btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Actualiza los datos del camion:");
 
@@ -82,9 +91,19 @@ public class ActualizarCamiones extends javax.swing.JFrame {
 
         jLabel7.setText("Kilometraje");
 
-        jButton2.setText("Guardar");
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Volver");
+        btnVolver.setText("Volver");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -94,29 +113,29 @@ public class ActualizarCamiones extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(btnGuardar)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3))
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnVolver))
+                    .addComponent(txtKilometroajeEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBuscarEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1))
+                        .addComponent(btnBuscar))
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPatenteEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtModeloEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(108, 108, 108)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtMarcaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtAñoEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
@@ -127,8 +146,8 @@ public class ActualizarCamiones extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(txtBuscarEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscar))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
@@ -139,33 +158,179 @@ public class ActualizarCamiones extends javax.swing.JFrame {
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPatenteEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtMarcaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtAñoEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtModeloEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtKilometroajeEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(btnGuardar)
+                    .addComponent(btnVolver))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtBuscarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarEntradaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtBuscarEntradaActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try {
+            String idStr = txtBuscarEntrada.getText().trim();
+            if (idStr.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Ingrese la ID del camión.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtBuscarEntrada.requestFocus();
+                return;
+            }
+
+            int idBuscado;
+            try {
+                idBuscado = Integer.parseInt(idStr);
+            } catch (NumberFormatException nfe) {
+                javax.swing.JOptionPane.showMessageDialog(this, "ID inválida. Debe ser un número entero.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                txtBuscarEntrada.requestFocus();
+                return;
+            }
+
+            DAOCamion dao = new DAOCamion();
+            List<model.Camion> lista = dao.getCamiones(idStr);
+
+            model.Camion encontrado = null;
+            for (model.Camion c : lista) {
+                if (c.getIdCamion() == idBuscado) {
+                    encontrado = c;
+                    break;
+                }
+            }
+
+            if (encontrado == null) {
+                poblarTablaConCamion(null);
+                limpiarCamposEntrada();
+                javax.swing.JOptionPane.showMessageDialog(this, "No se encontró un camión con esa ID.", "No encontrado", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            poblarTablaConCamion(encontrado);
+
+            txtPatenteEntrada.setText(encontrado.getPatenteCamion() == null ? "" : encontrado.getPatenteCamion());
+            txtMarcaEntrada.setText(encontrado.getMarca() == null ? "" : encontrado.getMarca());
+            txtModeloEntrada.setText(encontrado.getModelo() == null ? "" : encontrado.getModelo());
+            txtAñoEntrada.setText(String.valueOf(encontrado.getAnio()));
+            txtKilometroajeEntrada.setText(String.valueOf(encontrado.getKilometraje()));
+
+        } catch (SQLException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al buscar: " + ex.getMessage(), "Error BD", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        try {
+            int filas = tblDatosCamion.getRowCount();
+            if (filas == 0) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Primero busque y seleccione un camión para actualizar.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            Object idObj = tblDatosCamion.getValueAt(0, 0);
+            if (idObj == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "ID del camión no disponible.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            int id = Integer.parseInt(idObj.toString());
+
+            String patente = txtPatenteEntrada.getText().trim().toUpperCase();
+            if (patente.isEmpty() || !patente.matches("^[A-Z0-9-]{4,8}$")) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Patente inválida (4-8 caracteres, letras/números/guión).", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtPatenteEntrada.requestFocus();
+                return;
+            }
+
+            String marca = txtMarcaEntrada.getText().trim();
+            if (marca.length() > 50) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Marca demasiado larga (máx. 50).", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtMarcaEntrada.requestFocus();
+                return;
+            }
+
+            String modelo = txtModeloEntrada.getText().trim();
+            if (modelo.length() > 50) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Modelo demasiado largo (máx. 50).", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtModeloEntrada.requestFocus();
+                return;
+            }
+
+            int anio;
+            try {
+                anio = Integer.parseInt(txtAñoEntrada.getText().trim());
+            } catch (NumberFormatException nfe) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Año inválido.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtAñoEntrada.requestFocus();
+                return;
+            }
+            int anioActual = java.time.Year.now().getValue();
+            if (anio < 1900 || anio > anioActual + 1) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Año fuera de rango.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtAñoEntrada.requestFocus();
+                return;
+            }
+
+            int km;
+            try {
+                km = Integer.parseInt(txtKilometroajeEntrada.getText().trim());
+            } catch (NumberFormatException nfe) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Kilometraje inválido.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtKilometroajeEntrada.requestFocus();
+                return;
+            }
+            if (km < 0) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Kilometraje no puede ser negativo.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtKilometroajeEntrada.requestFocus();
+                return;
+            }
+
+            DAOCamion dao = new DAOCamion();
+            if (dao.patenteExisteExceptoId(patente, id)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "La patente ya está registrada en otro camión.", "Duplicado", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtPatenteEntrada.requestFocus();
+                return;
+            }
+
+            model.Camion c = new model.Camion();
+            c.setIdCamion(id);
+            c.setPatenteCamion(patente);
+            c.setMarca(marca.isEmpty() ? null : marca);
+            c.setModelo(modelo.isEmpty() ? null : modelo);
+            c.setAnio(anio);
+            c.setKilometraje(km);
+
+            dao.actualizarCamion(c);
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Camión actualizado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            limpiarCamposEntrada();
+            poblarTablaConCamion(null);
+
+        } catch (SQLException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al actualizar: " + ex.getMessage(), "Error BD", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        GestionCamiones gestionCamiones = new GestionCamiones();
+        gestionCamiones.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnVolverActionPerformed
 
     /**
      * @param args the command line arguments
@@ -203,9 +368,9 @@ public class ActualizarCamiones extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnVolver;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -214,12 +379,46 @@ public class ActualizarCamiones extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
+    private javax.swing.JTable tblDatosCamion;
+    private javax.swing.JTextField txtAñoEntrada;
+    private javax.swing.JTextField txtBuscarEntrada;
+    private javax.swing.JTextField txtKilometroajeEntrada;
+    private javax.swing.JTextField txtMarcaEntrada;
+    private javax.swing.JTextField txtModeloEntrada;
+    private javax.swing.JTextField txtPatenteEntrada;
     // End of variables declaration//GEN-END:variables
+
+    private void poblarTablaConCamion(model.Camion c) {
+        javax.swing.table.DefaultTableModel modelTbl = new javax.swing.table.DefaultTableModel();
+        modelTbl.addColumn("ID");
+        modelTbl.addColumn("Patente");
+        modelTbl.addColumn("Marca");
+        modelTbl.addColumn("Modelo");
+        modelTbl.addColumn("Año");
+        modelTbl.addColumn("Kilometraje");
+
+        if (c != null) {
+            Object[] fila = {
+                c.getIdCamion(),
+                c.getPatenteCamion(),
+                c.getMarca() == null ? "" : c.getMarca(),
+                c.getModelo() == null ? "" : c.getModelo(),
+                c.getAnio(),
+                c.getKilometraje()
+            };
+            modelTbl.addRow(fila);
+        }
+
+        tblDatosCamion.setModel(modelTbl);
+        tblDatosCamion.setAutoCreateRowSorter(true);
+    }
+
+    private void limpiarCamposEntrada() {
+        txtPatenteEntrada.setText("");
+        txtMarcaEntrada.setText("");
+        txtModeloEntrada.setText("");
+        txtAñoEntrada.setText("");
+        txtKilometroajeEntrada.setText("");
+    }
+
 }

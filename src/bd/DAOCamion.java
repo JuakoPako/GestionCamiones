@@ -152,10 +152,29 @@ public class DAOCamion {
                 + "anio = " + oCamion.getAnio() + ", "
                 + "kilometraje = " + oCamion.getKilometraje() + ", "
                 + "id_conductor = " + (oCamion.getIdConductor() > 0 ? oCamion.getIdConductor() : "NULL") + " "
-                + "WHERE id = " + oCamion.getIdCamion()+ ";";
+                + "WHERE id = " + oCamion.getIdCamion() + ";";
 
         oConexion.ejecutar(sql);
         System.out.println(sql);
+    }
+
+    public boolean patenteExisteExceptoId(String patente, int idExcepto) throws SQLException {
+        String sql = "SELECT COUNT(*) AS cnt FROM Camion WHERE patente = '" + patente + "' AND id <> " + idExcepto + ";";
+        oConexion.rs = oConexion.ejecutarSelect(sql);
+        try {
+            if (oConexion.rs.next()) {
+                return oConexion.rs.getInt("cnt") > 0;
+            }
+        } finally {
+            if (oConexion.rs != null) {
+                try {
+                    oConexion.rs.close();
+                } catch (SQLException e) {
+                }
+                oConexion.rs = null;
+            }
+        }
+        return false;
     }
 
 }

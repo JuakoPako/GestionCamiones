@@ -125,7 +125,9 @@ public class GestionCamiones extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVerCamionesActionPerformed
 
     private void btnActualizarCamionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarCamionActionPerformed
-        // TODO add your handling code here:
+        ActualizarCamiones actualizarCamiones = new ActualizarCamiones();
+        actualizarCamiones.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnActualizarCamionActionPerformed
 
     private void btnAgregarCamionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarCamionActionPerformed

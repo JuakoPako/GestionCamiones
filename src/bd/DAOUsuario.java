@@ -24,7 +24,7 @@ public class DAOUsuario {
      Genera la conexion entregando los datos
      */
     public DAOUsuario() throws SQLException {
-        oConexion = new Conexion("localhost", "gestion_camiones", "root", "");
+        oConexion = new Conexion("localhost", "gestion_camiones", "root", "1997");
     }
 
     public void crearUsuario(Usuario oUsuario) throws SQLException {

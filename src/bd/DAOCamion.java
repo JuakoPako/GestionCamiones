@@ -18,7 +18,7 @@ public class DAOCamion {
     private Conexion oConexion;
 
     public DAOCamion() throws SQLException {
-        oConexion = new Conexion("localhost", "gestion_camiones", "root", "");
+        oConexion = new Conexion("localhost", "gestion_camiones", "root", "1997");
     }
 
     public void crearCamion(Camion oCamion) throws SQLException {
@@ -70,18 +70,15 @@ public class DAOCamion {
                 c.setModelo(oConexion.rs.getString("modelo"));
                 c.setAnio(oConexion.rs.getInt("anio"));
                 c.setKilometraje(oConexion.rs.getInt("kilometraje"));
-                // id_conductor puede ser NULL en la BD; getInt devuelve 0 si es NULL,
-                // si necesitas distinguir NULL usa rs.wasNull() después de getInt
                 int idConductor = oConexion.rs.getInt("id_conductor");
                 if (oConexion.rs.wasNull()) {
-                    c.setIdConductor(0); // o el valor que uses para "sin conductor"
+                    c.setIdConductor(0);
                 } else {
                     c.setIdConductor(idConductor);
                 }
                 lista.add(c);
             }
         } finally {
-            // Cerrar ResultSet para liberar recursos
             if (oConexion.rs != null) {
                 try {
                     oConexion.rs.close();
@@ -140,10 +137,25 @@ public class DAOCamion {
 
         return listaCamion;
     }
-    
+
     public void borrarCamion(int id) throws SQLException {
         String sql = "DELETE FROM camion where id =" + id + ";";
         oConexion.ejecutar(sql);
         System.out.println(sql);
     }
+
+    public void actualizarCamion(Camion oCamion) throws SQLException {
+        String sql = "UPDATE Camion SET "
+                + "patente = '" + oCamion.getPatenteCamion() + "', "
+                + "marca = " + (oCamion.getMarca() == null ? "NULL" : "'" + oCamion.getMarca() + "'") + ", "
+                + "modelo = " + (oCamion.getModelo() == null ? "NULL" : "'" + oCamion.getModelo() + "'") + ", "
+                + "anio = " + oCamion.getAnio() + ", "
+                + "kilometraje = " + oCamion.getKilometraje() + ", "
+                + "id_conductor = " + (oCamion.getIdConductor() > 0 ? oCamion.getIdConductor() : "NULL") + " "
+                + "WHERE id = " + oCamion.getIdCamion()+ ";";
+
+        oConexion.ejecutar(sql);
+        System.out.println(sql);
+    }
+
 }

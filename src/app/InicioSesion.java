@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.Usuario;
 import app.MenuPrincipal;
+import model.Sesion;
 
 /**
  *
@@ -106,6 +107,7 @@ public class InicioSesion extends javax.swing.JFrame {
 
             if (u != null) {
                 JOptionPane.showMessageDialog(this, "Bienvenido " + u.getNombre());
+                Sesion.setUsuario(u);
                 MenuPrincipal menu = new MenuPrincipal();
                 menu.setVisible(true);
                 this.dispose();

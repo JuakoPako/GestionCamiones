@@ -4,6 +4,8 @@
  */
 package app;
 
+import model.Sesion;
+
 /**
  *
  * @author Franco
@@ -15,6 +17,16 @@ public class MenuPrincipal extends javax.swing.JFrame {
      */
     public MenuPrincipal() {
         initComponents();
+        
+        String rol = Sesion.getUsuario().getRol();
+        
+        if(rol.equals("CONDUCTOR")) {
+            btnGestionUsuarios.setEnabled(false);
+        }
+        
+        if(rol.equals("ADMIN")) {
+            btnMantenimiento.setEnabled(false);
+        }
     }
 
     /**

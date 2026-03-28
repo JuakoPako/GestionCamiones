@@ -46,4 +46,26 @@ public class Conexion {
         return rs;
     }
 
+    private static Conexion instancia = null;
+
+    /**
+     * Devuelve la instancia singleton de Conexion. Busca parámetros en
+     * propiedades del sistema (db.server, db.name, db.user, db.pass) o en
+     * variables de entorno (DB_SERVER, DB_NAME, DB_USER, DB_PASS).
+     *
+     * Lanza SQLException si faltan parámetros o si la creación falla.
+     */
+
+    public static Conexion getInstancia() throws SQLException {
+        if (instancia == null) {
+            // Valores temporales para pruebas locales
+            String server = "localhost";
+            String bd = "gestion_camiones";
+            String user = "root";
+            String pass = "1997";
+            instancia = new Conexion(server, bd, user, pass);
+        }
+        return instancia;
+    }
+
 }

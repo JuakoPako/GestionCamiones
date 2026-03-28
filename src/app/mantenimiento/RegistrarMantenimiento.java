@@ -13,12 +13,13 @@ import model.Mantenimiento;
  *
  * @author Franco
  */
-
 public class RegistrarMantenimiento extends javax.swing.JFrame {
 
     /**
      * Creates new form RegistrarMantenimiento
      */
+    private Integer originalIdCamion = null;
+
     public RegistrarMantenimiento() {
         initComponents();
     }
@@ -130,10 +131,10 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(90, 90, 90)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtKilometraje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6)
                             .addComponent(jLabel4)
-                            .addComponent(cmTipoMantenimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(cmTipoMantenimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtKilometraje, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -183,47 +184,236 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
     }//GEN-LAST:event_cmTipoMantenimientoActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try {
+            String filtro = txtBuscar.getText().trim(); // campo existente para ingresar ID
+            if (filtro.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Ingrese ID o ID Camión para buscar.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtBuscar.requestFocus();
+                return;
+            }
 
+            int val;
+            try {
+                val = Integer.parseInt(filtro);
+            } catch (NumberFormatException ex) {
+                javax.swing.JOptionPane.showMessageDialog(this, "El filtro debe ser numérico (ID o ID Camión).", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtBuscar.requestFocus();
+                return;
+            }
+
+            // Construir SQL: buscar por id o por id_camion, devolver la fila más reciente
+            String sql = "SELECT id, id_camion, fecha, tipo, descripcion, kilometraje "
+                    + "FROM Mantenimiento "
+                    + "WHERE id = " + val + " OR id_camion = " + val + " "
+                    + "ORDER BY fecha DESC LIMIT 1;";
+
+            // Obtener conexión y ejecutar (ajusta si tu Conexion usa otro método)
+            bd.Conexion con = bd.Conexion.getInstancia();
+            java.sql.ResultSet rs = con.ejecutarSelect(sql);
+
+            if (rs == null || !rs.next()) {
+                limpiarCampos();
+                if (rs != null) {
+                    rs.close();
+                }
+                javax.swing.JOptionPane.showMessageDialog(this, "No se encontraron mantenimientos para el filtro.", "Sin resultados", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            // Leer datos
+            int id = rs.getInt("id");
+            int idCamion = rs.getInt("id_camion");
+            java.sql.Date fechaSql = rs.getDate("fecha");
+            String tipo = rs.getString("tipo");
+            String descripcion = rs.getString("descripcion");
+            int km = rs.getInt("kilometraje");
+            Integer kilometraje = rs.wasNull() ? null : km;
+
+            // Guardar id_camion original (no editable)
+            originalIdCamion = idCamion;
+
+            // Poblar tabla con una sola fila (opcional)
+            DefaultTableModel modelTbl = new DefaultTableModel();
+            modelTbl.addColumn("ID");
+            modelTbl.addColumn("ID Camión");
+            modelTbl.addColumn("Fecha");
+            modelTbl.addColumn("Tipo");
+            modelTbl.addColumn("Descripción");
+            modelTbl.addColumn("Kilometraje");
+            Object[] fila = {id, idCamion, fechaSql, tipo, descripcion, kilometraje};
+            modelTbl.addRow(fila);
+            tblDatos.setModel(modelTbl);
+            tblDatos.setAutoCreateRowSorter(true);
+
+            // Poblar campos del formulario (no existe txtIdCamion; mostramos datos en campos existentes)
+            if (fechaSql != null) {
+                spnFecha.setValue(new java.util.Date(fechaSql.getTime()));
+            }
+            cmTipoMantenimiento.setSelectedItem(tipo == null ? "Preventivo" : tipo);
+            txaDescripcion.setText(descripcion == null ? "" : descripcion);
+            txtKilometraje.setText(kilometraje == null ? "" : String.valueOf(kilometraje));
+
+            rs.close();
+        } catch (SQLException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al buscar: " + ex.getMessage(), "Error BD", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        try {
+            // Determinar modo: actualización si la tabla tiene una fila con ID
+            int idMantenimiento = -1;
+            if (tblDatos.getRowCount() > 0) {
+                Object idObj = tblDatos.getValueAt(0, 0);
+                if (idObj != null) {
+                    try {
+                        idMantenimiento = Integer.parseInt(idObj.toString());
+                    } catch (NumberFormatException ex) {
+                        idMantenimiento = -1;
+                    }
+                }
+            }
 
+            // id_camion: si actualizamos, usamos originalIdCamion; si creamos, lo leemos desde txtBuscar (campo existente)
+            int idCamion;
+            if (idMantenimiento > 0) {
+                if (originalIdCamion == null) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "No se pudo determinar el ID del camión para actualizar.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                idCamion = originalIdCamion; // NO permitimos cambiar id_camion al actualizar
+            } else {
+                String idCamionStr = txtBuscar.getText().trim(); // usamos el campo de búsqueda como entrada de ID del camión
+                if (idCamionStr.isEmpty()) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Ingrese el ID del camión.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                    txtBuscar.requestFocus();
+                    return;
+                }
+                try {
+                    idCamion = Integer.parseInt(idCamionStr);
+                } catch (NumberFormatException e) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "ID de camión inválido.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                    txtBuscar.requestFocus();
+                    return;
+                }
+            }
+
+            // Fecha
+            java.util.Date fechaUtil = (java.util.Date) spnFecha.getValue();
+            java.sql.Date fechaSql = fechaUtil == null ? null : new java.sql.Date(fechaUtil.getTime());
+
+            // Tipo
+            String tipo = cmTipoMantenimiento.getSelectedItem() == null ? "" : cmTipoMantenimiento.getSelectedItem().toString().trim();
+            if (tipo.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione el tipo de mantenimiento.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                cmTipoMantenimiento.requestFocus();
+                return;
+            }
+
+            // Descripción (nullable)
+            String descripcion = txaDescripcion.getText().trim();
+            if (descripcion.isEmpty()) {
+                descripcion = null;
+            }
+
+            // Kilometraje (nullable)
+            String kmStr = txtKilometraje.getText().trim();
+            Integer kilometraje = null;
+            if (!kmStr.isEmpty()) {
+                try {
+                    kilometraje = Integer.parseInt(kmStr);
+                } catch (NumberFormatException e) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Kilometraje inválido. Debe ser un número entero.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                    txtKilometraje.requestFocus();
+                    return;
+                }
+            }
+
+            // Construir y ejecutar SQL usando Conexion (ajusta si tu Conexion tiene otro método)
+            bd.Conexion con = bd.Conexion.getInstancia();
+            StringBuilder sb = new StringBuilder();
+            if (idMantenimiento > 0) {
+                // UPDATE (no cambiamos id_camion desde UI)
+                sb.append("UPDATE Mantenimiento SET ");
+                sb.append("id_camion = ").append(idCamion).append(", ");
+                sb.append("fecha = ").append(fechaSql != null ? ("'" + fechaSql.toString() + "'") : "NULL").append(", ");
+                sb.append("tipo = '").append(escape(tipo)).append("', ");
+                if (descripcion != null) {
+                    sb.append("descripcion = '").append(escape(descripcion)).append("', ");
+                } else {
+                    sb.append("descripcion = NULL, ");
+                }
+                if (kilometraje != null) {
+                    sb.append("kilometraje = ").append(kilometraje).append(" ");
+                } else {
+                    sb.append("kilometraje = NULL ");
+                }
+                sb.append("WHERE id = ").append(idMantenimiento).append(";");
+                con.ejecutar(sb.toString());
+                javax.swing.JOptionPane.showMessageDialog(this, "Mantenimiento actualizado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                // INSERT
+                sb.append("INSERT INTO Mantenimiento (id_camion, fecha, tipo, descripcion, kilometraje) VALUES (");
+                sb.append(idCamion).append(", ");
+                sb.append(fechaSql != null ? ("'" + fechaSql.toString() + "'") : "NULL").append(", ");
+                sb.append("'").append(escape(tipo)).append("', ");
+                if (descripcion != null) {
+                    sb.append("'").append(escape(descripcion)).append("', ");
+                } else {
+                    sb.append("NULL, ");
+                }
+                if (kilometraje != null) {
+                    sb.append(kilometraje);
+                } else {
+                    sb.append("NULL");
+                }
+                sb.append(");");
+                con.ejecutar(sb.toString());
+                javax.swing.JOptionPane.showMessageDialog(this, "Mantenimiento registrado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            // Limpiar y resetear estado
+            limpiarCampos();
+
+        } catch (SQLException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar: " + ex.getMessage(), "Error BD", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-    /* Set the Nimbus look and feel */
-    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-     */
-    try {
-        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-            if ("Nimbus".equals(info.getName())) {
-                javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                break;
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
             }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-    } catch (ClassNotFoundException ex) {
-        java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (InstantiationException ex) {
-        java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (IllegalAccessException ex) {
-        java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-        java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-    //</editor-fold>
+        //</editor-fold>
 
-    /* Create and display the form */
-    java.awt.EventQueue.invokeLater(new Runnable() {
-        public void run() {
-            new RegistrarMantenimiento().setVisible(true);
-        }
-    });
-}
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new RegistrarMantenimiento().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
@@ -244,4 +434,21 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtKilometraje;
     // End of variables declaration//GEN-END:variables
+private void limpiarCampos() {
+        txtBuscar.setText("");
+        spnFecha.setValue(new java.util.Date());
+        cmTipoMantenimiento.setSelectedIndex(0);
+        txaDescripcion.setText("");
+        txtKilometraje.setText("");
+        DefaultTableModel tm = (DefaultTableModel) tblDatos.getModel();
+        tm.setRowCount(0);
+        originalIdCamion = null;
+    }
+
+    private String escape(String s) {
+        if (s == null) {
+            return "";
+        }
+        return s.replace("'", "''");
+    }
 }

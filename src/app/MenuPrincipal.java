@@ -4,6 +4,7 @@
  */
 package app;
 
+import app.mantenimiento.GestorMantenimiento;
 import model.Sesion;
 
 /**
@@ -118,7 +119,9 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMantenimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMantenimientoActionPerformed
-        // TODO add your handling code here:
+        GestorMantenimiento gestorMantenimiento = new GestorMantenimiento();
+        gestorMantenimiento.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnMantenimientoActionPerformed
 
     private void btnGestionCamionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionCamionesActionPerformed

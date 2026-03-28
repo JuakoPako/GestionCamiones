@@ -8,12 +8,12 @@ package app.mantenimiento;
  *
  * @author Franco
  */
-public class VerMantenimientos extends javax.swing.JFrame {
+public class VerHistorial extends javax.swing.JFrame {
 
     /**
      * Creates new form NewJFrame
      */
-    public VerMantenimientos() {
+    public VerHistorial() {
         initComponents();
     }
 
@@ -27,7 +27,7 @@ public class VerMantenimientos extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblMantenimientos = new javax.swing.JTable();
+        tblHistorial = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
         btnBuscar = new javax.swing.JButton();
@@ -35,7 +35,7 @@ public class VerMantenimientos extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        tblMantenimientos.setModel(new javax.swing.table.DefaultTableModel(
+        tblHistorial.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -46,9 +46,9 @@ public class VerMantenimientos extends javax.swing.JFrame {
                 "ID", "ID Camion", "Fecha", "Tipo", "Descripcion", "Kilometraje"
             }
         ));
-        jScrollPane1.setViewportView(tblMantenimientos);
+        jScrollPane1.setViewportView(tblHistorial);
 
-        jLabel1.setText("Ingrese la ID del mantenimiento:");
+        jLabel1.setText("Ingrese la ID del camion:");
 
         btnBuscar.setText("Buscar");
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -69,32 +69,31 @@ public class VerMantenimientos extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 573, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnBuscar)
                         .addGap(18, 18, 18)
                         .addComponent(btnVolver)))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
+                .addGap(17, 17, 17)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnBuscar)
-                        .addComponent(btnVolver)))
-                .addGap(30, 30, 30)
+                    .addComponent(btnBuscar)
+                    .addComponent(btnVolver))
+                .addGap(24, 24, 24)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(213, Short.MAX_VALUE))
+                .addContainerGap(237, Short.MAX_VALUE))
         );
 
         pack();
@@ -103,37 +102,21 @@ public class VerMantenimientos extends javax.swing.JFrame {
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         try {
             String filtro = txtBuscar.getText().trim();
-            if (filtro.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Ingrese la ID del mantenimiento.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
-                txtBuscar.requestFocus();
-                return;
-            }
-
-            int idMantenimiento;
-            try {
-                idMantenimiento = Integer.parseInt(filtro);
-            } catch (NumberFormatException ex) {
-                javax.swing.JOptionPane.showMessageDialog(this, "La ID debe ser numérica.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
-                txtBuscar.requestFocus();
-                return;
-            }
-
-            // Consulta SQL
-            String sql = "SELECT id, id_camion, fecha, tipo, descripcion, kilometraje "
-                    + "FROM Mantenimiento WHERE id = " + idMantenimiento + ";";
-
-            bd.Conexion con = bd.Conexion.getInstancia();
-            java.sql.ResultSet rs = con.ejecutarSelect(sql);
-
-            if (rs == null || !rs.next()) {
-                if (rs != null) {
-                    rs.close();
+            Integer idCamion = null;
+            if (!filtro.isEmpty()) {
+                try {
+                    idCamion = Integer.parseInt(filtro);
+                } catch (NumberFormatException nfe) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "La ID del camión debe ser numérica.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                    txtBuscar.requestFocus();
+                    return;
                 }
-                javax.swing.JOptionPane.showMessageDialog(this, "No se encontró mantenimiento con esa ID.", "Sin resultados", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                return;
             }
 
-            // Crear modelo de tabla
+            bd.DAOMantenimiento dao = new bd.DAOMantenimiento();
+            java.util.List<model.Mantenimiento> lista = dao.findByCamionAll(idCamion);
+
+            // Construir modelo de tabla
             javax.swing.table.DefaultTableModel modelTbl = new javax.swing.table.DefaultTableModel();
             modelTbl.addColumn("ID");
             modelTbl.addColumn("ID Camión");
@@ -142,25 +125,26 @@ public class VerMantenimientos extends javax.swing.JFrame {
             modelTbl.addColumn("Descripción");
             modelTbl.addColumn("Kilometraje");
 
-            // Agregar fila con datos
-            Object[] fila = {
-                rs.getInt("id"),
-                rs.getInt("id_camion"),
-                rs.getDate("fecha"),
-                rs.getString("tipo"),
-                rs.getString("descripcion"),
-                rs.getInt("kilometraje")
-            };
-            modelTbl.addRow(fila);
+            for (model.Mantenimiento m : lista) {
+                Object[] fila = {
+                    m.getId(),
+                    m.getIdCamion(),
+                    m.getFecha(), // muestra java.sql.Date; puedes formatear si quieres
+                    m.getTipo(),
+                    m.getDescripcion(),
+                    m.getKilometraje()
+                };
+                modelTbl.addRow(fila);
+            }
 
-            // Asignar modelo a la tabla
-            tblMantenimientos.setModel(modelTbl);
-            tblMantenimientos.setAutoCreateRowSorter(true);
+            tblHistorial.setModel(modelTbl);
+            tblHistorial.setAutoCreateRowSorter(true);
 
-            rs.close();
-
+            if (lista.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "No hay registros para el filtro indicado.", "Sin resultados", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
         } catch (java.sql.SQLException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error al buscar: " + ex.getMessage(), "Error BD", javax.swing.JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al obtener historial: " + ex.getMessage(), "Error BD", javax.swing.JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error inesperado: " + ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
@@ -189,23 +173,21 @@ public class VerMantenimientos extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VerMantenimientos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VerHistorial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VerMantenimientos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VerHistorial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VerMantenimientos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VerHistorial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VerMantenimientos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VerHistorial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new VerMantenimientos().setVisible(true);
+                new VerHistorial().setVisible(true);
             }
         });
     }
@@ -215,7 +197,7 @@ public class VerMantenimientos extends javax.swing.JFrame {
     private javax.swing.JButton btnVolver;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblMantenimientos;
+    private javax.swing.JTable tblHistorial;
     private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }

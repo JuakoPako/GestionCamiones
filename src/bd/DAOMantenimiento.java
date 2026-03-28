@@ -9,6 +9,7 @@ import java.util.List;
 import javax.xml.transform.Result;
 import model.Mantenimiento;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 /**
  *
@@ -194,5 +195,38 @@ public class DAOMantenimiento {
 
         bd.Conexion con = bd.Conexion.getInstancia();
         con.ejecutar(sb.toString());
+    }
+
+    public List<model.Mantenimiento> findByCamionAll(Integer idCamion) throws SQLException {
+        String sql;
+        if (idCamion == null) {
+            sql = "SELECT id, id_camion, fecha, tipo, descripcion, kilometraje FROM Mantenimiento ORDER BY fecha DESC;";
+        } else {
+            sql = "SELECT id, id_camion, fecha, tipo, descripcion, kilometraje "
+                    + "FROM Mantenimiento WHERE id_camion = " + idCamion + " ORDER BY fecha DESC;";
+        }
+
+        bd.Conexion con = bd.Conexion.getInstancia();
+        ResultSet rs = con.ejecutarSelect(sql);
+        try {
+            List<model.Mantenimiento> lista = new ArrayList<>();
+            while (rs != null && rs.next()) {
+                model.Mantenimiento m = new model.Mantenimiento();
+                m.setId(rs.getInt("id"));
+                m.setIdCamion(rs.getInt("id_camion"));
+                java.sql.Date fecha = rs.getDate("fecha");
+                m.setFecha(fecha);
+                m.setTipo(rs.getString("tipo"));
+                m.setDescripcion(rs.getString("descripcion"));
+                int km = rs.getInt("kilometraje");
+                m.setKilometraje(rs.wasNull() ? null : km);
+                lista.add(m);
+            }
+            return lista;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+        }
     }
 }

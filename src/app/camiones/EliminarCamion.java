@@ -1,4 +1,4 @@
-package app;
+package app.camiones;
 
 
 import bd.DAOCamion;

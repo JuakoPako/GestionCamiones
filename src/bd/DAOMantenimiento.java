@@ -6,7 +6,9 @@ package bd;
 
 import java.sql.SQLException;
 import java.util.List;
+import javax.xml.transform.Result;
 import model.Mantenimiento;
+import java.sql.ResultSet;
 
 /**
  *
@@ -71,7 +73,7 @@ public class DAOMantenimiento {
         if (m == null) {
             throw new SQLException("Objeto Mantenimiento nulo.");
         }
-        if (m.getId()== null || m.getId()<= 0) {
+        if (m.getId() == null || m.getId() <= 0) {
             throw new SQLException("ID de mantenimiento inválido para actualizar.");
         }
 
@@ -121,5 +123,76 @@ public class DAOMantenimiento {
             return "";
         }
         return s.replace("'", "''");
+    }
+
+    public model.Mantenimiento findById(int id) throws SQLException {
+        String sql = "SELECT id, id_camion, fecha, tipo, descripcion, kilometraje FROM Mantenimiento WHERE id = " + id + " LIMIT 1;";
+        bd.Conexion con = bd.Conexion.getInstancia();
+        ResultSet rs = con.ejecutarSelect(sql);
+        try {
+            if (rs != null && rs.next()) {
+                model.Mantenimiento m = new model.Mantenimiento();
+                m.setId(rs.getInt("id"));
+                m.setIdCamion(rs.getInt("id_camion"));
+                java.sql.Date fecha = rs.getDate("fecha");
+                m.setFecha(fecha);
+                m.setTipo(rs.getString("tipo"));
+                m.setDescripcion(rs.getString("descripcion"));
+                int km = rs.getInt("kilometraje");
+                m.setKilometraje(rs.wasNull() ? null : km);
+                return m;
+            }
+            return null;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+        }
+    }
+
+// Devuelve el último Mantenimiento por id_camion (o null si no existe)
+    public model.Mantenimiento findByCamion(int idCamion) throws SQLException {
+        String sql = "SELECT id, id_camion, fecha, tipo, descripcion, kilometraje "
+                + "FROM Mantenimiento WHERE id_camion = " + idCamion
+                + " ORDER BY fecha DESC LIMIT 1;";
+        bd.Conexion con = bd.Conexion.getInstancia();
+        ResultSet rs = con.ejecutarSelect(sql);
+        try {
+            if (rs != null && rs.next()) {
+                model.Mantenimiento m = new model.Mantenimiento();
+                m.setId(rs.getInt("id"));
+                m.setIdCamion(rs.getInt("id_camion"));
+                java.sql.Date fecha = rs.getDate("fecha");
+                m.setFecha(fecha);
+                m.setTipo(rs.getString("tipo"));
+                m.setDescripcion(rs.getString("descripcion"));
+                int km = rs.getInt("kilometraje");
+                m.setKilometraje(rs.wasNull() ? null : km);
+                return m;
+            }
+            return null;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+        }
+    }
+
+// Actualiza un mantenimiento existente (lanza SQLException si falla)
+    public void update(model.Mantenimiento m) throws SQLException {
+        if (m == null || m.getId() == null) {
+            throw new IllegalArgumentException("Mantenimiento o id nulo en update");
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("UPDATE Mantenimiento SET ");
+        sb.append("fecha = ").append(m.getFecha() != null ? ("'" + m.getFecha().toString() + "'") : "NULL").append(", ");
+        sb.append("tipo = ").append(m.getTipo() != null ? ("'" + m.getTipo().replace("'", "''") + "'") : "NULL").append(", ");
+        sb.append("descripcion = ").append(m.getDescripcion() != null ? ("'" + m.getDescripcion().replace("'", "''") + "'") : "NULL").append(", ");
+        sb.append("kilometraje = ").append(m.getKilometraje() != null ? m.getKilometraje() : "NULL");
+        sb.append(" WHERE id = ").append(m.getId()).append(";");
+
+        bd.Conexion con = bd.Conexion.getInstancia();
+        con.ejecutar(sb.toString());
     }
 }

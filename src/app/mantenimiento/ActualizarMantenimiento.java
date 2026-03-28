@@ -18,10 +18,20 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
     /**
      * Creates new form RegistrarMantenimiento
      */
-    private Integer originalIdCamion = null;
+    private Integer selectedIdMantenimiento = null;
+
+    ;
 
     public ActualizarMantenimiento() {
         initComponents();
+        spnFecha.setModel(new javax.swing.SpinnerDateModel(
+                new java.util.Date(), // valor inicial
+                null, // sin límite inferior
+                null, // sin límite superior
+                java.util.Calendar.DAY_OF_MONTH // incremento por día
+        ));
+        // Formato visible yyyy-MM-dd
+        spnFecha.setEditor(new javax.swing.JSpinner.DateEditor(spnFecha, "yyyy-MM-dd"));
     }
 
     /**
@@ -95,6 +105,11 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
         });
 
         btnVolver.setText("Volver");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Tipo de mantenimiento");
 
@@ -180,16 +195,143 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try {
+            String filtro = txtBuscar.getText().trim();
+            if (filtro.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Ingrese ID de mantenimiento o ID del camión.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtBuscar.requestFocus();
+                return;
+            }
 
+            int val;
+            try {
+                val = Integer.parseInt(filtro);
+            } catch (NumberFormatException ex) {
+                javax.swing.JOptionPane.showMessageDialog(this, "El filtro debe ser numérico.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtBuscar.requestFocus();
+                return;
+            }
+
+            bd.DAOMantenimiento dao = new bd.DAOMantenimiento();
+            model.Mantenimiento m = dao.findById(val);
+            if (m == null) {
+                m = dao.findByCamion(val); // intenta por id_camion
+            }
+            if (m == null) {
+                limpiarCampos();
+                javax.swing.JOptionPane.showMessageDialog(this, "No se encontraron mantenimientos para el filtro.", "Sin resultados", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            selectedIdMantenimiento = m.getId();
+
+            // Poblar tabla (una fila)
+            javax.swing.table.DefaultTableModel modelTbl = new javax.swing.table.DefaultTableModel();
+            modelTbl.addColumn("ID");
+            modelTbl.addColumn("ID Camión");
+            modelTbl.addColumn("Fecha");
+            modelTbl.addColumn("Tipo");
+            modelTbl.addColumn("Descripción");
+            modelTbl.addColumn("Kilometraje");
+            Object[] fila = {m.getId(), m.getIdCamion(), m.getFecha(), m.getTipo(), m.getDescripcion(), m.getKilometraje()};
+            modelTbl.addRow(fila);
+            tblMantenimientos.setModel(modelTbl);
+            tblMantenimientos.setAutoCreateRowSorter(true);
+
+            // Poblar campos para edición
+            if (m.getFecha() != null) {
+                spnFecha.setValue(new java.util.Date(m.getFecha().getTime()));
+            }
+            if (m.getTipo() != null) {
+                cbTipoMantenimiento.setSelectedItem(m.getTipo());
+            }
+            txtDescripcion.setText(m.getDescripcion() == null ? "" : m.getDescripcion());
+            txtKilometraje.setText(m.getKilometraje() == null ? "" : String.valueOf(m.getKilometraje()));
+
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al buscar: " + ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        if (selectedIdMantenimiento == null) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Primero busque y seleccione un mantenimiento para actualizar.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
+        try {
+            // Fecha
+            Object valFecha = spnFecha.getValue();
+            java.sql.Date fechaSql;
+            if (valFecha instanceof java.util.Date) {
+                fechaSql = new java.sql.Date(((java.util.Date) valFecha).getTime());
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Fecha inválida.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Tipo
+            String tipo = cbTipoMantenimiento.getSelectedItem() == null ? "" : cbTipoMantenimiento.getSelectedItem().toString().trim();
+            if (tipo.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione el tipo de mantenimiento.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                cbTipoMantenimiento.requestFocus();
+                return;
+            }
+
+            // Descripción
+            String descripcion = txtDescripcion.getText().trim();
+            if (descripcion.isEmpty()) {
+                descripcion = null;
+            }
+
+            // Kilometraje
+            String kmStr = txtKilometraje.getText().trim();
+            Integer kilometraje = null;
+            if (!kmStr.isEmpty()) {
+                try {
+                    kilometraje = Integer.parseInt(kmStr);
+                } catch (NumberFormatException nfe) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Kilometraje inválido. Debe ser un número entero.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                    txtKilometraje.requestFocus();
+                    return;
+                }
+            }
+
+            // Construir objeto modelo y actualizar vía DAO
+            model.Mantenimiento m = new model.Mantenimiento();
+            m.setId(selectedIdMantenimiento);
+            m.setFecha(fechaSql);
+            m.setTipo(tipo);
+            m.setDescripcion(descripcion);
+            m.setKilometraje(kilometraje);
+
+            bd.DAOMantenimiento dao = new bd.DAOMantenimiento();
+            dao.update(m);
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Mantenimiento actualizado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+            // Reflejar cambios en la tabla
+            if (tblMantenimientos.getRowCount() > 0) {
+                tblMantenimientos.setValueAt(fechaSql, 0, 2);
+                tblMantenimientos.setValueAt(tipo, 0, 3);
+                tblMantenimientos.setValueAt(descripcion, 0, 4);
+                tblMantenimientos.setValueAt(kilometraje, 0, 5);
+            }
+
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al actualizar: " + ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void cbTipoMantenimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoMantenimientoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbTipoMantenimientoActionPerformed
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        GestorMantenimiento gestorMantenimiento = new GestorMantenimiento();
+        gestorMantenimiento.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnVolverActionPerformed
 
     /**
      * @param args the command line arguments
@@ -253,17 +395,15 @@ private String escape(String s) {
         return s.replace("'", "''");
     }
 
-// Limpia los campos del formulario (opcional)
     private void limpiarCampos() {
         txtBuscar.setText("");
         spnFecha.setValue(new java.util.Date());
-        if (cbTipo.getItemCount() > 0) {
-            cbTipo.setSelectedIndex(0);
+        if (cbTipoMantenimiento.getItemCount() > 0) {
+            cbTipoMantenimiento.setSelectedIndex(0);
         }
         txtDescripcion.setText("");
         txtKilometraje.setText("");
         selectedIdMantenimiento = null;
         tblMantenimientos.setModel(new javax.swing.table.DefaultTableModel());
     }
-
 }

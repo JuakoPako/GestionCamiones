@@ -4,6 +4,7 @@
  */
 package app;
 
+import app.camiones.GestionCamiones;
 import app.mantenimiento.GestorMantenimiento;
 import model.Sesion;
 

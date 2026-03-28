@@ -15,6 +15,10 @@ public class RegistroMantenimiento extends javax.swing.JFrame {
      */
     public RegistroMantenimiento() {
         initComponents();
+        spnFecha = new javax.swing.JSpinner();
+        spnFecha.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), null, null, java.util.Calendar.DAY_OF_MONTH));
+        spnFecha.setEditor(new javax.swing.JSpinner.DateEditor(spnFecha, "yyyy-MM-dd"));
+
     }
 
     /**
@@ -47,6 +51,11 @@ public class RegistroMantenimiento extends javax.swing.JFrame {
         jLabel1.setText("Ingrese la ID del camion:");
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Rellene los campos:");
 
@@ -70,6 +79,11 @@ public class RegistroMantenimiento extends javax.swing.JFrame {
         jLabel6.setText("Kilometraje");
 
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         btnVolver.setText("Volver");
 
@@ -153,6 +167,180 @@ public class RegistroMantenimiento extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbTipoMantenimientoActionPerformed
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        try {
+            // 1) id_camion desde txtBuscar
+            String idCamionStr = txtBuscar.getText().trim();
+            if (idCamionStr.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Ingrese la ID del camión.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtBuscar.requestFocus();
+                return;
+            }
+            int idCamion;
+            try {
+                idCamion = Integer.parseInt(idCamionStr);
+            } catch (NumberFormatException ex) {
+                javax.swing.JOptionPane.showMessageDialog(this, "ID de camión inválido.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtBuscar.requestFocus();
+                return;
+            }
+
+            // 2) Fecha desde spnFecha -> java.sql.Date
+            Object valFecha = spnFecha.getValue();
+            java.sql.Date fechaSql = null;
+            if (valFecha instanceof java.util.Date) {
+                fechaSql = new java.sql.Date(((java.util.Date) valFecha).getTime());
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Fecha inválida.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // 3) Tipo
+            String tipo = cbTipoMantenimiento.getSelectedItem() == null ? "" : cbTipoMantenimiento.getSelectedItem().toString().trim();
+            if (tipo.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione el tipo de mantenimiento.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                cbTipoMantenimiento.requestFocus();
+                return;
+            }
+
+            // 4) Descripción (nullable)
+            String descripcion = txtDescripcion.getText().trim();
+            if (descripcion.isEmpty()) {
+                descripcion = null;
+            }
+
+            // 5) Kilometraje (nullable, entero)
+            String kmStr = txtKilometraje.getText().trim();
+            Integer kilometraje = null;
+            if (!kmStr.isEmpty()) {
+                try {
+                    kilometraje = Integer.parseInt(kmStr);
+                } catch (NumberFormatException ex) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Kilometraje inválido. Debe ser un número entero.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                    txtKilometraje.requestFocus();
+                    return;
+                }
+            }
+
+            // 6) Construir SQL INSERT (no incluimos id porque es AUTO_INCREMENT)
+            StringBuilder sb = new StringBuilder();
+            sb.append("INSERT INTO Mantenimiento (id_camion, fecha, tipo, descripcion, kilometraje) VALUES (");
+            sb.append(idCamion).append(", ");
+            sb.append(fechaSql != null ? ("'" + fechaSql.toString() + "'") : "NULL").append(", ");
+            sb.append("'").append(escape(tipo)).append("', ");
+            if (descripcion != null) {
+                sb.append("'").append(escape(descripcion)).append("', ");
+            } else {
+                sb.append("NULL, ");
+            }
+            if (kilometraje != null) {
+                sb.append(kilometraje);
+            } else {
+                sb.append("NULL");
+            }
+            sb.append(");");
+
+            // 7) Ejecutar usando tu Conexion singleton
+            bd.Conexion con = bd.Conexion.getInstancia();
+            con.ejecutar(sb.toString());
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Mantenimiento registrado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            limpiarCampos();
+
+        } catch (java.sql.SQLException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar: " + ex.getMessage(), "Error BD", javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error inesperado: " + ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try {
+            // 1) id_camion desde txtBuscar
+            String idCamionStr = txtBuscar.getText().trim();
+            if (idCamionStr.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Ingrese la ID del camión.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtBuscar.requestFocus();
+                return;
+            }
+            int idCamion;
+            try {
+                idCamion = Integer.parseInt(idCamionStr);
+            } catch (NumberFormatException ex) {
+                javax.swing.JOptionPane.showMessageDialog(this, "ID de camión inválido.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtBuscar.requestFocus();
+                return;
+            }
+
+            // 2) Fecha desde spnFecha -> java.sql.Date
+            Object valFecha = spnFecha.getValue();
+            java.sql.Date fechaSql = null;
+            if (valFecha instanceof java.util.Date) {
+                fechaSql = new java.sql.Date(((java.util.Date) valFecha).getTime());
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Fecha inválida.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // 3) Tipo
+            String tipo = cbTipoMantenimiento.getSelectedItem() == null ? "" : cbTipoMantenimiento.getSelectedItem().toString().trim();
+            if (tipo.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione el tipo de mantenimiento.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                cbTipoMantenimiento.requestFocus();
+                return;
+            }
+
+            // 4) Descripción (nullable)
+            String descripcion = txtDescripcion.getText().trim();
+            if (descripcion.isEmpty()) {
+                descripcion = null;
+            }
+
+            // 5) Kilometraje (nullable, entero)
+            String kmStr = txtKilometraje.getText().trim();
+            Integer kilometraje = null;
+            if (!kmStr.isEmpty()) {
+                try {
+                    kilometraje = Integer.parseInt(kmStr);
+                } catch (NumberFormatException ex) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Kilometraje inválido. Debe ser un número entero.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                    txtKilometraje.requestFocus();
+                    return;
+                }
+            }
+
+            // 6) Construir SQL INSERT (no incluimos id porque es AUTO_INCREMENT)
+            StringBuilder sb = new StringBuilder();
+            sb.append("INSERT INTO Mantenimiento (id_camion, fecha, tipo, descripcion, kilometraje) VALUES (");
+            sb.append(idCamion).append(", ");
+            sb.append(fechaSql != null ? ("'" + fechaSql.toString() + "'") : "NULL").append(", ");
+            sb.append("'").append(escape(tipo)).append("', ");
+            if (descripcion != null) {
+                sb.append("'").append(escape(descripcion)).append("', ");
+            } else {
+                sb.append("NULL, ");
+            }
+            if (kilometraje != null) {
+                sb.append(kilometraje);
+            } else {
+                sb.append("NULL");
+            }
+            sb.append(");");
+
+            // 7) Ejecutar usando tu Conexion singleton
+            bd.Conexion con = bd.Conexion.getInstancia();
+            con.ejecutar(sb.toString());
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Mantenimiento registrado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            limpiarCampos();
+
+        } catch (java.sql.SQLException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar: " + ex.getMessage(), "Error BD", javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error inesperado: " + ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -206,4 +394,21 @@ public class RegistroMantenimiento extends javax.swing.JFrame {
     private javax.swing.JTextArea txtDescripcion;
     private javax.swing.JTextField txtKilometraje;
     // End of variables declaration//GEN-END:variables
+// Helper: escapar comillas simples en cadenas
+
+    private String escape(String s) {
+        if (s == null) {
+            return null;
+        }
+        return s.replace("'", "''");
+    }
+
+// Helper: limpiar campos del formulario
+    private void limpiarCampos() {
+        txtBuscar.setText("");
+        spnFecha.setValue(new java.util.Date());
+        cbTipoMantenimiento.setSelectedIndex(0);
+        txtDescripcion.setText("");
+        txtKilometraje.setText("");
+    }
 }

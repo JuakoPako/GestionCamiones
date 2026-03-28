@@ -6,21 +6,20 @@ package model;
 
 import java.util.Date;
 
-
 public class Mantenimiento {
 
-private int idMantenimiento;
-private int idCamion;
-private Date fecha;
-private String tipo;
-private String descripcion;
-private int kilometraje;
+    private Integer id;
+    private int idCamion;
+    private Date fecha;
+    private String tipo;
+    private String descripcion;
+    private Integer kilometraje;
 
     public Mantenimiento() {
     }
 
-    public Mantenimiento(int idMantenimiento, int idCamion, Date fecha, String tipo, String descripcion, int kilometraje) {
-        this.idMantenimiento = idMantenimiento;
+    public Mantenimiento(Integer id, int idCamion, Date fecha, String tipo, String descripcion, Integer kilometraje) {
+        this.id = id;
         this.idCamion = idCamion;
         this.fecha = fecha;
         this.tipo = tipo;
@@ -28,12 +27,12 @@ private int kilometraje;
         this.kilometraje = kilometraje;
     }
 
-    public int getIdMantenimiento() {
-        return idMantenimiento;
+    public Integer getId() {
+        return id;
     }
 
-    public void setIdMantenimiento(int idMantenimiento) {
-        this.idMantenimiento = idMantenimiento;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public int getIdCamion() {
@@ -68,18 +67,22 @@ private int kilometraje;
         this.descripcion = descripcion;
     }
 
-    public int getKilometraje() {
+    public Integer getKilometraje() {
         return kilometraje;
     }
 
-    public void setKilometraje(int kilometraje) {
+    public void setKilometraje(Integer kilometraje) {
         this.kilometraje = kilometraje;
     }
-    
-    
-    
-    
 
-
-
+    public String toString() {
+        return "Mantenimiento{"
+                + "id=" + id
+                + ", idCamion=" + idCamion
+                + ", fecha=" + fecha
+                + ", tipo='" + tipo + '\''
+                + ", descripcion='" + descripcion + '\''
+                + ", kilometraje=" + kilometraje
+                + '}';
+    }
 }

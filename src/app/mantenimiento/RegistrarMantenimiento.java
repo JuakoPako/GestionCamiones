@@ -244,4 +244,4 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtKilometraje;
     // End of variables declaration//GEN-END:variables
-
+}

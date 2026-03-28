@@ -6,6 +6,7 @@
 package bd;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import model.Usuario;
 
 /**
@@ -24,7 +25,7 @@ public class DAOUsuario {
      Genera la conexion entregando los datos
      */
     public DAOUsuario() throws SQLException {
-        oConexion = new Conexion("localhost", "gestion_camiones", "root", "1997");
+        oConexion = new Conexion("localhost", "gestion_camiones", "root", "");
     }
 
     public void crearUsuario(Usuario oUsuario) throws SQLException {
@@ -62,6 +63,25 @@ public class DAOUsuario {
         }
 
         return null;
+    }
+    
+    public ArrayList<Usuario> getListaUsuarios() throws SQLException {
+        ArrayList<Usuario> lista = new ArrayList<>();
+        String sql = "SELECT id, nombre, correo, rol from usuario;";
+        
+        oConexion.rs = oConexion.ejecutarSelect(sql);
+        
+        while (oConexion.rs.next()) {
+            Usuario u = new Usuario();
+            u.setIdUsuario(oConexion.rs.getInt(1));
+            u.setNombre(oConexion.rs.getString(2));
+            u.setCorreo(oConexion.rs.getString(3));
+            u.setRol(oConexion.rs.getString(4));
+            lista.add(u);
+        }
+        oConexion.rs.close();
+        
+        return lista;
     }
 
 }

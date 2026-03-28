@@ -53,6 +53,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         lblUsuario.setText("Bienvenido");
 
         btnGestionUsuarios.setText("Gestion Usuarios");
+        btnGestionUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGestionUsuariosActionPerformed(evt);
+            }
+        });
 
         btnGestionCamiones.setText("Gestion Camiones");
         btnGestionCamiones.addActionListener(new java.awt.event.ActionListener() {
@@ -130,6 +135,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
         gestionCamiones.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnGestionCamionesActionPerformed
+
+    private void btnGestionUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionUsuariosActionPerformed
+        GestionUsuario gestionUsuario = new GestionUsuario();
+        gestionUsuario.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnGestionUsuariosActionPerformed
 
     /**
      * @param args the command line arguments

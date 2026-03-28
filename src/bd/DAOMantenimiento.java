@@ -20,7 +20,7 @@ public class DAOMantenimiento {
     private Conexion oConexion;
 
     public DAOMantenimiento() throws SQLException {
-        oConexion = new Conexion("localhost", "gestion_camiones", "root", "1997");
+        oConexion = new Conexion("localhost", "gestion_camiones", "root", "");
     }
 
     public void crearMantenimiento(model.Mantenimiento m) throws SQLException {

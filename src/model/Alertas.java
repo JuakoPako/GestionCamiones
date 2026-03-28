@@ -16,7 +16,7 @@ public class Alertas {
     private int idAlerta;
     private int idCamion;
     private Date fechaAlerta;
-    private String tipoAlerta;
+    private String responsable;
     private boolean atendida;
 
     public Alertas() {
@@ -26,7 +26,7 @@ public class Alertas {
         this.idAlerta = idAlerta;
         this.idCamion = idCamion;
         this.fechaAlerta = fechaAlerta;
-        this.tipoAlerta = tipoAlerta;
+        this.responsable = tipoAlerta;
         this.atendida = atendida;
     }
 
@@ -55,11 +55,11 @@ public class Alertas {
     }
 
     public String getTipoAlerta() {
-        return tipoAlerta;
+        return responsable;
     }
 
     public void setTipoAlerta(String tipoAlerta) {
-        this.tipoAlerta = tipoAlerta;
+        this.responsable = tipoAlerta;
     }
 
     public boolean isAtendida() {

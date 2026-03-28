@@ -13,14 +13,14 @@ import model.Mantenimiento;
  *
  * @author Franco
  */
-public class RegistrarMantenimiento extends javax.swing.JFrame {
+public class ActualizarMantenimiento extends javax.swing.JFrame {
 
     /**
      * Creates new form RegistrarMantenimiento
      */
     private Integer originalIdCamion = null;
 
-    public RegistrarMantenimiento() {
+    public ActualizarMantenimiento() {
         initComponents();
     }
 
@@ -40,10 +40,8 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
         tblDatos = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        cmTipoMantenimiento = new javax.swing.JComboBox<>();
         spnFecha = new javax.swing.JSpinner();
         jScrollPane2 = new javax.swing.JScrollPane();
         txaDescripcion = new javax.swing.JTextArea();
@@ -79,18 +77,9 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
 
         jLabel3.setText("Fecha del mantenimiento");
 
-        jLabel4.setText("Tipo de mantenimiento");
-
         jLabel5.setText("Descripcion");
 
         jLabel6.setText("Kilometraje");
-
-        cmTipoMantenimiento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Preventino", "Correctivo" }));
-        cmTipoMantenimiento.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmTipoMantenimientoActionPerformed(evt);
-            }
-        });
 
         txaDescripcion.setColumns(20);
         txaDescripcion.setRows(5);
@@ -132,8 +121,6 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
                         .addGap(90, 90, 90)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
-                            .addComponent(jLabel4)
-                            .addComponent(cmTipoMantenimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtKilometraje, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
@@ -151,16 +138,9 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmTipoMantenimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(spnFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jLabel3)
+                .addGap(14, 14, 14)
+                .addComponent(spnFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -178,10 +158,6 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void cmTipoMantenimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmTipoMantenimientoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmTipoMantenimientoActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         try {
@@ -397,20 +373,21 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ActualizarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ActualizarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ActualizarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ActualizarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RegistrarMantenimiento().setVisible(true);
+                new ActualizarMantenimiento().setVisible(true);
             }
         });
     }
@@ -419,11 +396,9 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnVolver;
-    private javax.swing.JComboBox<String> cmTipoMantenimiento;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;

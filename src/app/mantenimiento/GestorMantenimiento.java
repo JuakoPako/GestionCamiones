@@ -51,6 +51,11 @@ public class GestorMantenimiento extends javax.swing.JFrame {
         });
 
         jButton3.setText("Editar mantenimiento");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Historial de mantenimientos");
 
@@ -96,10 +101,14 @@ public class GestorMantenimiento extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        RegistrarMantenimiento registrarMantenimiento = new RegistrarMantenimiento();
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        ActualizarMantenimiento registrarMantenimiento = new ActualizarMantenimiento();
         registrarMantenimiento.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments

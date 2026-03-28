@@ -6,9 +6,8 @@ package app.mantenimiento;
 
 import bd.DAOMantenimiento;
 import java.sql.SQLException;
-import java.util.List;
 import javax.swing.table.DefaultTableModel;
-import java.time.Year;
+import model.Mantenimiento;
 
 /**
  *
@@ -184,179 +183,10 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
     }//GEN-LAST:event_cmTipoMantenimientoActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        try {
-            String filtro = txtBuscar.getText().trim();
-            if (filtro.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Ingrese ID o patente para buscar.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
-                txtBuscar.requestFocus();
-                return;
-            }
 
-            DAOMantenimiento dao = new DAOMantenimiento();
-            java.util.List<model.Mantenimiento> lista = dao.getMantenimientos(filtro, null, null, null);
-
-            if (lista == null || lista.isEmpty()) {
-                limpiarCampos();
-                DefaultTableModel tm = (DefaultTableModel) tblDatos.getModel();
-                tm.setRowCount(0);
-                javax.swing.JOptionPane.showMessageDialog(this, "No se encontraron mantenimientos para el filtro.", "Sin resultados", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-
-            // Tomamos la primera coincidencia
-            model.Mantenimiento m = lista.get(0);
-
-            // Guardar id_camion original para que no se cambie al actualizar
-            originalIdCamion = m.getIdCamion();
-
-            // Poblar tabla con una sola fila
-            DefaultTableModel modelTbl = new DefaultTableModel();
-            modelTbl.addColumn("ID");
-            modelTbl.addColumn("ID Camión");
-            modelTbl.addColumn("Fecha");
-            modelTbl.addColumn("Tipo");
-            modelTbl.addColumn("Descripción");
-            modelTbl.addColumn("Kilometraje");
-            Object[] fila = {
-                m.getIdMantenimiento(),
-                m.getIdCamion(),
-                m.getFecha(),
-                m.getTipo(),
-                m.getDescripcion(),
-                m.getKilometraje()
-            };
-            modelTbl.addRow(fila);
-            tblDatos.setModel(modelTbl);
-            tblDatos.setAutoCreateRowSorter(true);
-
-            // Poblar campos del formulario
-            txtIdCamion.setText(String.valueOf(m.getIdCamion())); // mostrar pero no permitir editar si lo deseas
-            txtIdCamion.setEditable(false); // evita cambios accidentales
-            if (m.getFecha() != null) {
-                spinnerFecha.setValue(new java.util.Date(m.getFecha().getTime()));
-            }
-            cbTipo.setSelectedItem(m.getTipo() == null ? "Preventivo" : m.getTipo());
-            txtDescripcion.setText(m.getDescripcion() == null ? "" : m.getDescripcion());
-            txtKilometraje.setText(m.getKilometraje() == null ? "" : String.valueOf(m.getKilometraje()));
-
-        } catch (SQLException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error al buscar: " + ex.getMessage(), "Error BD", javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-
-        try {
-            // Determinar si estamos en modo actualización (tabla con fila y ID presente)
-            int idMantenimiento = -1;
-            if (tblDatos.getRowCount() > 0) {
-                Object idObj = tblDatos.getValueAt(0, 0);
-                if (idObj != null) {
-                    try {
-                        idMantenimiento = Integer.parseInt(idObj.toString());
-                    } catch (NumberFormatException ex) {
-                        idMantenimiento = -1;
-                    }
-                }
-            }
-
-            // Si es creación, leer id_camion desde el campo; si es actualización, usar originalIdCamion
-            int idCamion;
-            if (idMantenimiento > 0) {
-                if (originalIdCamion == null) {
-                    javax.swing.JOptionPane.showMessageDialog(this, "No se pudo determinar el ID del camión para actualizar.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                idCamion = originalIdCamion; // **NO** se permite cambiar id_camion al actualizar
-            } else {
-                String idCamionStr = txtIdCamion.getText().trim();
-                if (idCamionStr.isEmpty()) {
-                    javax.swing.JOptionPane.showMessageDialog(this, "Ingrese el ID del camión.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
-                    txtIdCamion.requestFocus();
-                    return;
-                }
-                try {
-                    idCamion = Integer.parseInt(idCamionStr);
-                } catch (NumberFormatException e) {
-                    javax.swing.JOptionPane.showMessageDialog(this, "ID de camión inválido.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
-                    txtIdCamion.requestFocus();
-                    return;
-                }
-            }
-
-            // Fecha (JSpinner con SpinnerDateModel)
-            java.util.Date fechaUtil = (java.util.Date) spinnerFecha.getValue();
-            if (fechaUtil == null) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione la fecha del mantenimiento.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
-                spnFecha.requestFocus();
-                return;
-            }
-            java.sql.Date fechaSql = new java.sql.Date(fechaUtil.getTime());
-
-            // Tipo (obligatorio)
-            String tipo = cbTipo.getSelectedItem() == null ? "" : cbTipo.getSelectedItem().toString().trim();
-            if (tipo.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione el tipo de mantenimiento.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
-                cbTipo.requestFocus();
-                return;
-            }
-
-            // Descripción (puede ser null)
-            String descripcion = txtDescripcion.getText().trim();
-            if (descripcion.isEmpty()) {
-                descripcion = null;
-            }
-
-            // Kilometraje (INT obligatorio según tu comentario)
-            String kmStr = txtKilometraje.getText().trim();
-            if (kmStr.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Ingrese el kilometraje (entero).", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
-                txtKilometraje.requestFocus();
-                return;
-            }
-            int kilometraje;
-            try {
-                kilometraje = Integer.parseInt(kmStr);
-            } catch (NumberFormatException e) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Kilometraje inválido. Debe ser un número entero.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
-                txtKilometraje.requestFocus();
-                return;
-            }
-
-            // Construir objeto Mantenimiento (solo campos existentes en la BD)
-            model.Mantenimiento m = new model.Mantenimiento();
-            if (idMantenimiento > 0) {
-                m.setIdMantenimiento(idMantenimiento);
-            }
-
-            m.setIdCamion(idCamion);
-            m.setFecha(fechaSql);               // model.Mantenimiento.fecha debe aceptar java.util.Date o java.sql.Date
-            m.setTipo(tipo);
-            m.setDescripcion(descripcion);
-            m.setKilometraje(kilometraje);      // tipo primitivo int en la BD
-
-            DAOMantenimiento dao = new DAOMantenimiento();
-            if (m.getIdCamion() != null && m.getId() > 0) {
-                // Actualizar: NO cambiamos id_camion (ya viene en m desde originalIdCamion)
-                dao.actualizarMantenimiento(m);
-                javax.swing.JOptionPane.showMessageDialog(this, "Mantenimiento actualizado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                // Crear nuevo
-                dao.crearMantenimiento(m);
-                javax.swing.JOptionPane.showMessageDialog(this, "Mantenimiento registrado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            }
-
-            // Resetar estado de formulario
-            limpiarCampos();
-            DefaultTableModel tm = (DefaultTableModel) tblMantenimientos.getModel();
-            tm.setRowCount(0);
-            originalIdCamion = null;
-            txtIdCamion.setEditable(true);
-
-        } catch (SQLException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar: " + ex.getMessage(), "Error BD", javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
-    }
 
     }//GEN-LAST:event_btnGuardarActionPerformed
 
@@ -414,13 +244,4 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtKilometraje;
     // End of variables declaration//GEN-END:variables
-private void limpiarCampos() {
-        txtBuscar.setText("");
-        spnFecha.setValue(new java.util.Date());
-        cmTipoMantenimiento.setSelectedIndex(0);
-        txaDescripcion.setText("");
-        txtKilometraje.setText("");
-        // limpiar tabla
-        DefaultTableModel tm = (DefaultTableModel) tblDatos.getModel();
-        tm.setRowCount(0);
-    }
+

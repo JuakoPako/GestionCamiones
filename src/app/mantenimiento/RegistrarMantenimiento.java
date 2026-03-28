@@ -4,10 +4,17 @@
  */
 package app.mantenimiento;
 
+import bd.DAOMantenimiento;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import java.time.Year;
+
 /**
  *
  * @author Franco
  */
+
 public class RegistrarMantenimiento extends javax.swing.JFrame {
 
     /**
@@ -27,30 +34,35 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        txtBuscar = new javax.swing.JTextField();
+        btnBuscar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblDatos = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jSpinner1 = new javax.swing.JSpinner();
+        cmTipoMantenimiento = new javax.swing.JComboBox<>();
+        spnFecha = new javax.swing.JSpinner();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jTextField2 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        txaDescripcion = new javax.swing.JTextArea();
+        txtKilometraje = new javax.swing.JTextField();
+        btnGuardar = new javax.swing.JButton();
+        btnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Ingrese la ID del camion:");
 
-        jButton1.setText("Buscar");
+        btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblDatos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -61,7 +73,7 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
                 "ID", "ID Camion", "Fecha", "Tipo", "Descripcion", "Kilometraje"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblDatos);
 
         jLabel2.setText("Ingrese los datos:");
 
@@ -73,20 +85,25 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
 
         jLabel6.setText("Kilometraje");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Preventino", "Correctivo" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        cmTipoMantenimiento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Preventino", "Correctivo" }));
+        cmTipoMantenimiento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                cmTipoMantenimientoActionPerformed(evt);
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        txaDescripcion.setColumns(20);
+        txaDescripcion.setRows(5);
+        jScrollPane2.setViewportView(txaDescripcion);
 
-        jButton2.setText("Guardar");
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Volver");
+        btnVolver.setText("Volver");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -96,28 +113,28 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
                 .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(btnGuardar)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3))
+                        .addComponent(btnVolver))
                     .addComponent(jLabel2)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1))
+                        .addComponent(btnBuscar))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 573, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel5)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(90, 90, 90)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtKilometraje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6)
                             .addComponent(jLabel4)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(cmTipoMantenimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -127,8 +144,8 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -140,10 +157,10 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cmTipoMantenimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
-                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(spnFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -151,61 +168,238 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtKilometraje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(btnGuardar)
+                    .addComponent(btnVolver))
                 .addGap(29, 29, 29))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void cmTipoMantenimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmTipoMantenimientoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_cmTipoMantenimientoActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try {
+            String filtro = txtBuscar.getText().trim();
+            if (filtro.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Ingrese ID o patente para buscar.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtBuscar.requestFocus();
+                return;
+            }
+
+            DAOMantenimiento dao = new DAOMantenimiento();
+            java.util.List<model.Mantenimiento> lista = dao.getMantenimientos(filtro, null, null, null);
+
+            if (lista == null || lista.isEmpty()) {
+                limpiarCampos();
+                DefaultTableModel tm = (DefaultTableModel) tblDatos.getModel();
+                tm.setRowCount(0);
+                javax.swing.JOptionPane.showMessageDialog(this, "No se encontraron mantenimientos para el filtro.", "Sin resultados", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            // Tomamos la primera coincidencia
+            model.Mantenimiento m = lista.get(0);
+
+            // Guardar id_camion original para que no se cambie al actualizar
+            originalIdCamion = m.getIdCamion();
+
+            // Poblar tabla con una sola fila
+            DefaultTableModel modelTbl = new DefaultTableModel();
+            modelTbl.addColumn("ID");
+            modelTbl.addColumn("ID Camión");
+            modelTbl.addColumn("Fecha");
+            modelTbl.addColumn("Tipo");
+            modelTbl.addColumn("Descripción");
+            modelTbl.addColumn("Kilometraje");
+            Object[] fila = {
+                m.getIdMantenimiento(),
+                m.getIdCamion(),
+                m.getFecha(),
+                m.getTipo(),
+                m.getDescripcion(),
+                m.getKilometraje()
+            };
+            modelTbl.addRow(fila);
+            tblDatos.setModel(modelTbl);
+            tblDatos.setAutoCreateRowSorter(true);
+
+            // Poblar campos del formulario
+            txtIdCamion.setText(String.valueOf(m.getIdCamion())); // mostrar pero no permitir editar si lo deseas
+            txtIdCamion.setEditable(false); // evita cambios accidentales
+            if (m.getFecha() != null) {
+                spinnerFecha.setValue(new java.util.Date(m.getFecha().getTime()));
+            }
+            cbTipo.setSelectedItem(m.getTipo() == null ? "Preventivo" : m.getTipo());
+            txtDescripcion.setText(m.getDescripcion() == null ? "" : m.getDescripcion());
+            txtKilometraje.setText(m.getKilometraje() == null ? "" : String.valueOf(m.getKilometraje()));
+
+        } catch (SQLException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al buscar: " + ex.getMessage(), "Error BD", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+
+        try {
+            // Determinar si estamos en modo actualización (tabla con fila y ID presente)
+            int idMantenimiento = -1;
+            if (tblDatos.getRowCount() > 0) {
+                Object idObj = tblDatos.getValueAt(0, 0);
+                if (idObj != null) {
+                    try {
+                        idMantenimiento = Integer.parseInt(idObj.toString());
+                    } catch (NumberFormatException ex) {
+                        idMantenimiento = -1;
+                    }
+                }
+            }
+
+            // Si es creación, leer id_camion desde el campo; si es actualización, usar originalIdCamion
+            int idCamion;
+            if (idMantenimiento > 0) {
+                if (originalIdCamion == null) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "No se pudo determinar el ID del camión para actualizar.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                idCamion = originalIdCamion; // **NO** se permite cambiar id_camion al actualizar
+            } else {
+                String idCamionStr = txtIdCamion.getText().trim();
+                if (idCamionStr.isEmpty()) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Ingrese el ID del camión.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                    txtIdCamion.requestFocus();
+                    return;
+                }
+                try {
+                    idCamion = Integer.parseInt(idCamionStr);
+                } catch (NumberFormatException e) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "ID de camión inválido.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                    txtIdCamion.requestFocus();
+                    return;
+                }
+            }
+
+            // Fecha (JSpinner con SpinnerDateModel)
+            java.util.Date fechaUtil = (java.util.Date) spinnerFecha.getValue();
+            if (fechaUtil == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione la fecha del mantenimiento.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                spnFecha.requestFocus();
+                return;
+            }
+            java.sql.Date fechaSql = new java.sql.Date(fechaUtil.getTime());
+
+            // Tipo (obligatorio)
+            String tipo = cbTipo.getSelectedItem() == null ? "" : cbTipo.getSelectedItem().toString().trim();
+            if (tipo.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Seleccione el tipo de mantenimiento.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                cbTipo.requestFocus();
+                return;
+            }
+
+            // Descripción (puede ser null)
+            String descripcion = txtDescripcion.getText().trim();
+            if (descripcion.isEmpty()) {
+                descripcion = null;
+            }
+
+            // Kilometraje (INT obligatorio según tu comentario)
+            String kmStr = txtKilometraje.getText().trim();
+            if (kmStr.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Ingrese el kilometraje (entero).", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtKilometraje.requestFocus();
+                return;
+            }
+            int kilometraje;
+            try {
+                kilometraje = Integer.parseInt(kmStr);
+            } catch (NumberFormatException e) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Kilometraje inválido. Debe ser un número entero.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtKilometraje.requestFocus();
+                return;
+            }
+
+            // Construir objeto Mantenimiento (solo campos existentes en la BD)
+            model.Mantenimiento m = new model.Mantenimiento();
+            if (idMantenimiento > 0) {
+                m.setIdMantenimiento(idMantenimiento);
+            }
+
+            m.setIdCamion(idCamion);
+            m.setFecha(fechaSql);               // model.Mantenimiento.fecha debe aceptar java.util.Date o java.sql.Date
+            m.setTipo(tipo);
+            m.setDescripcion(descripcion);
+            m.setKilometraje(kilometraje);      // tipo primitivo int en la BD
+
+            DAOMantenimiento dao = new DAOMantenimiento();
+            if (m.getIdCamion() != null && m.getId() > 0) {
+                // Actualizar: NO cambiamos id_camion (ya viene en m desde originalIdCamion)
+                dao.actualizarMantenimiento(m);
+                javax.swing.JOptionPane.showMessageDialog(this, "Mantenimiento actualizado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                // Crear nuevo
+                dao.crearMantenimiento(m);
+                javax.swing.JOptionPane.showMessageDialog(this, "Mantenimiento registrado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            // Resetar estado de formulario
+            limpiarCampos();
+            DefaultTableModel tm = (DefaultTableModel) tblMantenimientos.getModel();
+            tm.setRowCount(0);
+            originalIdCamion = null;
+            txtIdCamion.setEditable(true);
+
+        } catch (SQLException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar: " + ex.getMessage(), "Error BD", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    /* Set the Nimbus look and feel */
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+     */
+    try {
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new RegistrarMantenimiento().setVisible(true);
-            }
-        });
+    } catch (ClassNotFoundException ex) {
+        java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (InstantiationException ex) {
+        java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (IllegalAccessException ex) {
+        java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        java.util.logging.Logger.getLogger(RegistrarMantenimiento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+    //</editor-fold>
+
+    /* Create and display the form */
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            new RegistrarMantenimiento().setVisible(true);
+        }
+    });
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnVolver;
+    private javax.swing.JComboBox<String> cmTipoMantenimiento;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -214,10 +408,19 @@ public class RegistrarMantenimiento extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JSpinner spnFecha;
+    private javax.swing.JTable tblDatos;
+    private javax.swing.JTextArea txaDescripcion;
+    private javax.swing.JTextField txtBuscar;
+    private javax.swing.JTextField txtKilometraje;
     // End of variables declaration//GEN-END:variables
-}
+private void limpiarCampos() {
+        txtBuscar.setText("");
+        spnFecha.setValue(new java.util.Date());
+        cmTipoMantenimiento.setSelectedIndex(0);
+        txaDescripcion.setText("");
+        txtKilometraje.setText("");
+        // limpiar tabla
+        DefaultTableModel tm = (DefaultTableModel) tblDatos.getModel();
+        tm.setRowCount(0);
+    }

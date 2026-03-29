@@ -29,8 +29,8 @@
                       <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="btnAgregarCamion" alignment="0" max="32767" attributes="0"/>
-                          <Component id="btnActualizarCamion" alignment="0" max="32767" attributes="0"/>
-                          <Component id="btnEliminarCamion" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnActualizarConductor" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnEliminarConductor" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -53,9 +53,9 @@
               <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
               <Component id="btnAgregarCamion" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-              <Component id="btnActualizarCamion" min="-2" max="-2" attributes="0"/>
+              <Component id="btnActualizarConductor" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-              <Component id="btnEliminarCamion" min="-2" max="-2" attributes="0"/>
+              <Component id="btnEliminarConductor" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="174" max="32767" attributes="0"/>
               <Component id="btnCerrarSesion" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
@@ -77,20 +77,20 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAgregarCamionActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnActualizarCamion">
+    <Component class="javax.swing.JButton" name="btnActualizarConductor">
       <Properties>
         <Property name="text" type="java.lang.String" value="Actualizar Conductor"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnActualizarCamionActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnActualizarConductorActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnEliminarCamion">
+    <Component class="javax.swing.JButton" name="btnEliminarConductor">
       <Properties>
         <Property name="text" type="java.lang.String" value="Eliminar Conductor"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEliminarCamionActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEliminarConductorActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnCerrarSesion">

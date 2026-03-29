@@ -32,8 +32,8 @@ public class GestionUsuario extends javax.swing.JFrame {
 
         lblUsuario = new javax.swing.JLabel();
         btnAgregarCamion = new javax.swing.JButton();
-        btnActualizarCamion = new javax.swing.JButton();
-        btnEliminarCamion = new javax.swing.JButton();
+        btnActualizarConductor = new javax.swing.JButton();
+        btnEliminarConductor = new javax.swing.JButton();
         btnCerrarSesion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -47,17 +47,17 @@ public class GestionUsuario extends javax.swing.JFrame {
             }
         });
 
-        btnActualizarCamion.setText("Actualizar Conductor");
-        btnActualizarCamion.addActionListener(new java.awt.event.ActionListener() {
+        btnActualizarConductor.setText("Actualizar Conductor");
+        btnActualizarConductor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnActualizarCamionActionPerformed(evt);
+                btnActualizarConductorActionPerformed(evt);
             }
         });
 
-        btnEliminarCamion.setText("Eliminar Conductor");
-        btnEliminarCamion.addActionListener(new java.awt.event.ActionListener() {
+        btnEliminarConductor.setText("Eliminar Conductor");
+        btnEliminarConductor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarCamionActionPerformed(evt);
+                btnEliminarConductorActionPerformed(evt);
             }
         });
 
@@ -78,8 +78,8 @@ public class GestionUsuario extends javax.swing.JFrame {
                         .addGap(32, 32, 32)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(btnAgregarCamion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnActualizarCamion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnEliminarCamion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(btnActualizarConductor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEliminarConductor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(268, 268, 268)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -95,9 +95,9 @@ public class GestionUsuario extends javax.swing.JFrame {
                 .addGap(47, 47, 47)
                 .addComponent(btnAgregarCamion)
                 .addGap(34, 34, 34)
-                .addComponent(btnActualizarCamion)
+                .addComponent(btnActualizarConductor)
                 .addGap(36, 36, 36)
-                .addComponent(btnEliminarCamion)
+                .addComponent(btnEliminarConductor)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
                 .addComponent(btnCerrarSesion)
                 .addGap(38, 38, 38))
@@ -112,17 +112,17 @@ public class GestionUsuario extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnAgregarCamionActionPerformed
 
-    private void btnActualizarCamionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarCamionActionPerformed
+    private void btnActualizarConductorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarConductorActionPerformed
         ActualizarCamiones actualizarCamiones = new ActualizarCamiones();
         actualizarCamiones.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_btnActualizarCamionActionPerformed
+    }//GEN-LAST:event_btnActualizarConductorActionPerformed
 
-    private void btnEliminarCamionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCamionActionPerformed
-        EliminarCamion eliminarCamion = new EliminarCamion();
-        eliminarCamion.setVisible(true);
+    private void btnEliminarConductorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarConductorActionPerformed
+        EliminarConductor eliminarConductor = new EliminarConductor();
+        eliminarConductor.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_btnEliminarCamionActionPerformed
+    }//GEN-LAST:event_btnEliminarConductorActionPerformed
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
         MenuPrincipal menu = new MenuPrincipal();
@@ -166,10 +166,10 @@ public class GestionUsuario extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnActualizarCamion;
+    private javax.swing.JButton btnActualizarConductor;
     private javax.swing.JButton btnAgregarCamion;
     private javax.swing.JButton btnCerrarSesion;
-    private javax.swing.JButton btnEliminarCamion;
+    private javax.swing.JButton btnEliminarConductor;
     private javax.swing.JLabel lblUsuario;
     // End of variables declaration//GEN-END:variables
 }

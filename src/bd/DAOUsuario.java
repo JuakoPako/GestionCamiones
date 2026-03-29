@@ -83,5 +83,13 @@ public class DAOUsuario {
         
         return lista;
     }
-
+    
+    
+    public void borrarUsuario(int id) throws SQLException {
+        String sql = "DELETE FROM usuario where id =" + id + ";";
+        oConexion.ejecutar(sql);
+        System.out.println(sql);
+    }
+    
+    
 }

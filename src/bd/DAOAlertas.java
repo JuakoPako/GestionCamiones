@@ -111,4 +111,34 @@ public class DAOAlertas {
         System.out.println("DAOAlertas.insertarAlertaConPatente SQL: " + sql);
         oConexion.ejecutar(sql);
     }
+
+    public java.util.List<model.Alertas> findHistoryByCamion(int idCamion) throws SQLException {
+        java.util.ArrayList<model.Alertas> lista = new java.util.ArrayList<>();
+        String sql = "SELECT id, id_camion, fecha, responsable, atendida "
+                + "FROM Alertas WHERE id_camion = " + idCamion + " "
+                + "ORDER BY fecha DESC, id DESC;";
+        System.out.println("DAOAlertas.findHistoryByCamion SQL: " + sql);
+        oConexion.rs = oConexion.ejecutarSelect(sql);
+        try {
+            while (oConexion.rs.next()) {
+                model.Alertas a = new model.Alertas();
+                a.setId(oConexion.rs.getInt("id"));
+                a.setId_camion(oConexion.rs.getInt("id_camion"));
+                a.setFecha(oConexion.rs.getDate("fecha"));
+                a.setResponsable(oConexion.rs.getString("responsable"));
+                a.setAtendida(oConexion.rs.getBoolean("atendida"));
+                lista.add(a);
+            }
+        } finally {
+            if (oConexion.rs != null) {
+                try {
+                    oConexion.rs.close();
+                } catch (SQLException e) {
+                }
+                oConexion.rs = null;
+            }
+        }
+        return lista;
+    }
+
 }

@@ -3,7 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package app.alertas;
-
+import bd.DAOAlertas;
+import model.Alertas;
 /**
  *
  * @author Franco
@@ -27,10 +28,11 @@ public class HistorialAlertas extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtBuscarEntrada = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAlertas = new javax.swing.JTable();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -53,6 +55,13 @@ public class HistorialAlertas extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tblAlertas);
 
+        jButton2.setText("Volver");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -62,9 +71,11 @@ public class HistorialAlertas extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBuscarEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1))
+                        .addComponent(jButton1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2))
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
@@ -75,8 +86,9 @@ public class HistorialAlertas extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(txtBuscarEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(278, Short.MAX_VALUE))
@@ -86,8 +98,26 @@ public class HistorialAlertas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String txt = txtBuscarEntrada.getText().trim();
+        if (txt.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Ingrese la ID del camión para ver historial.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+            txtBuscarEntrada.requestFocus();
+            return;
+        }
+        try {
+            int idCamion = Integer.parseInt(txt);
+            refreshTableHistory(idCamion);
+        } catch (NumberFormatException nfe) {
+            javax.swing.JOptionPane.showMessageDialog(this, "La ID debe ser numérica.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+            txtBuscarEntrada.requestFocus();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        GestionAlertas gestionAlertas = new GestionAlertas();
+        gestionAlertas.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -126,9 +156,47 @@ public class HistorialAlertas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tblAlertas;
+    private javax.swing.JTextField txtBuscarEntrada;
     // End of variables declaration//GEN-END:variables
+// Método: refresca la tabla con TODO el historial del camión
+
+    private void refreshTableHistory(int idCamion) {
+        try {
+            bd.DAOAlertas daoA = new bd.DAOAlertas();
+            java.util.List<model.Alertas> lista = daoA.findHistoryByCamion(idCamion);
+
+            javax.swing.table.DefaultTableModel modelTbl = new javax.swing.table.DefaultTableModel(
+                    new Object[][]{}, new String[]{"ID", "ID Camión", "Fecha", "Responsable", "Atendida"}) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+
+            for (model.Alertas a : lista) {
+                modelTbl.addRow(new Object[]{
+                    a.getId(),
+                    a.getId_camion(),
+                    a.getFecha(),
+                    a.getResponsable(),
+                    a.isAtendida()
+                });
+            }
+
+            final javax.swing.table.TableModel tm = modelTbl;
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                tblAlertas.setModel(tm);
+                tblAlertas.setAutoCreateRowSorter(true);
+            });
+
+        } catch (java.sql.SQLException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al cargar historial: " + ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }
+
 }

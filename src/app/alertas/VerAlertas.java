@@ -135,41 +135,48 @@ public class VerAlertas extends javax.swing.JFrame {
                 return;
             }
 
-            // Obtener camión y su kilometraje actual
             bd.DAOCamion daoCam = new bd.DAOCamion();
             model.Camion camion = daoCam.findById(idCamion);
             if (camion == null) {
                 javax.swing.JOptionPane.showMessageDialog(this, "No existe camión con esa ID.", "Sin resultados", javax.swing.JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
+
             Integer kmActual = camion.getKilometraje();
             if (kmActual == null) {
                 kmActual = 0;
             }
 
-            // Lógica de creación automática de alerta si km >= 5000
+            // DEBUG: imprimir datos del camión
+            System.out.println("DEBUG: idCamion=" + idCamion + " kmActual=" + kmActual + " patente='" + camion.getPatenteCamion() + "'");
+
             final int UMBRAL = 5000;
             bd.DAOAlertas daoA = new bd.DAOAlertas();
 
-            String patente = camion.getPatenteCamion(); // asegúrate de que Camion tenga getPatente()
             if (kmActual >= UMBRAL) {
                 boolean existeNoAtendida = daoA.existeAlertaNoAtendida(idCamion);
+                System.out.println("DEBUG: existeAlertaNoAtendida=" + existeNoAtendida);
                 if (!existeNoAtendida) {
-                    daoA.insertarAlerta(idCamion, patente == null ? "SIN_PATENTE" : patente);
+                    // usar la patente que viene en el objeto Camion
+                    String patente = camion.getPatenteCamion();
+                    String responsableParaInsert = (patente != null && !patente.trim().isEmpty()) ? patente.trim() : "SIN_PATENTE";
+                    System.out.println("DEBUG: insertando alerta con responsable='" + responsableParaInsert + "'");
+                    daoA.insertarAlerta(idCamion, responsableParaInsert);
                     javax.swing.JOptionPane.showMessageDialog(this,
                             "Se creó una alerta automática por kilometraje (" + kmActual + " km).",
                             "Alerta creada", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    System.out.println("DEBUG: no se inserta alerta porque ya existe una no atendida");
                 }
             }
 
-            // Cargar alertas del camión (todas)
+            // refrescar tabla
             java.util.List<model.Alertas> lista = daoA.findByCamion(idCamion, false);
 
-            // Construir modelo de tabla acorde a model.Alertas y la tabla DB
             javax.swing.table.DefaultTableModel modelTbl = new javax.swing.table.DefaultTableModel() {
                 @Override
                 public boolean isCellEditable(int row, int column) {
-                    return false; // tabla solo lectura
+                    return false;
                 }
             };
             modelTbl.addColumn("ID");
@@ -179,14 +186,7 @@ public class VerAlertas extends javax.swing.JFrame {
             modelTbl.addColumn("Atendida");
 
             for (model.Alertas a : lista) {
-                Object[] fila = new Object[]{
-                    a.getId(),
-                    a.getId_camion(),
-                    a.getFecha(),
-                    a.getResponsable(),
-                    a.isAtendida()
-                };
-                modelTbl.addRow(fila);
+                modelTbl.addRow(new Object[]{a.getId(), a.getId_camion(), a.getFecha(), a.getResponsable(), a.isAtendida()});
             }
 
             tblAlertas.setModel(modelTbl);

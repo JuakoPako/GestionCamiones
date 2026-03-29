@@ -13,53 +13,53 @@ import java.util.Date;
 
 public class Alertas {
 
-    private int idAlerta;
-    private int idCamion;
-    private Date fechaAlerta;
+    private int id;
+    private int id_camion;
+    private Date fecha;
     private String responsable;
     private boolean atendida;
 
     public Alertas() {
     }
 
-    public Alertas(int idAlerta, int idCamion, Date fechaAlerta, String tipoAlerta, boolean atendida) {
-        this.idAlerta = idAlerta;
-        this.idCamion = idCamion;
-        this.fechaAlerta = fechaAlerta;
-        this.responsable = tipoAlerta;
+    public Alertas(int id, int id_camion, Date fecha, String responsable, boolean atendida) {
+        this.id = id;
+        this.id_camion = id_camion;
+        this.fecha = fecha;
+        this.responsable = responsable;
         this.atendida = atendida;
     }
 
-    public int getIdAlerta() {
-        return idAlerta;
+    public int getId() {
+        return id;
     }
 
-    public void setIdAlerta(int idAlerta) {
-        this.idAlerta = idAlerta;
+    public int getId_camion() {
+        return id_camion;
     }
 
-    public int getIdCamion() {
-        return idCamion;
+    public Date getFecha() {
+        return fecha;
     }
 
-    public void setIdCamion(int idCamion) {
-        this.idCamion = idCamion;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public Date getFechaAlerta() {
-        return fechaAlerta;
+    public void setId_camion(int id_camion) {
+        this.id_camion = id_camion;
     }
 
-    public void setFechaAlerta(Date fechaAlerta) {
-        this.fechaAlerta = fechaAlerta;
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
-
-    public String getTipoAlerta() {
+    
+    public String getResponsable() {
         return responsable;
     }
 
-    public void setTipoAlerta(String tipoAlerta) {
-        this.responsable = tipoAlerta;
+    public void setResponsable(String responsable) {
+        this.responsable = responsable;
     }
 
     public boolean isAtendida() {

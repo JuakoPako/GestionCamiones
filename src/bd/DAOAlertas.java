@@ -1,31 +1,114 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package bd;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import model.Alertas;
 
 /**
- *
- * @author Franco
+ * DAO para la tabla Alertas
  */
 public class DAOAlertas {
 
     private Conexion oConexion;
 
     public DAOAlertas() throws SQLException {
-        oConexion = new Conexion("localhost", "gestion_camiones", "root", "");
+        // Ajusta credenciales si tu proyecto las maneja distinto
+        oConexion = new Conexion("localhost", "gestion_camiones", "root", "1997");
     }
 
-    public void crearAlerta(Alertas a) throws SQLException {
-        String sql = "INSERT INTO Alertas VALUES(null,"
-                + a.getIdCamion() + ",'"
-                + a.getFechaAlerta() + "','"
-                + a.getTipoAlerta() + "',"
-                + (a.isAtendida() ? "TRUE" : "FALSE") + ");";
+    private String escape(String s) {
+        if (s == null) {
+            return "";
+        }
+        return s.replace("'", "''");
+    }
+
+    /**
+     * Inserta una alerta simple en la tabla Alertas. Responsable puede ser ""
+     * si la crea el sistema.
+     */
+    public void insertarAlerta(int id_camion, String responsable) throws SQLException {
+        String sql = "INSERT INTO Alertas (id_camion, fecha, responsable, atendida) VALUES ("
+                + id_camion + ", CURDATE(), '" + escape(responsable) + "', FALSE);";
+        System.out.println("DAOAlertas.insertarAlerta SQL: " + sql);
         oConexion.ejecutar(sql);
-        System.out.println(sql);
+    }
+
+    /**
+     * Devuelve true si existe alguna alerta NO atendida para el camión.
+     */
+    public boolean existeAlertaNoAtendida(int id_camion) throws SQLException {
+        String sql = "SELECT 1 FROM Alertas WHERE id_camion = " + id_camion + " AND atendida = FALSE LIMIT 1;";
+        ResultSet rs = oConexion.ejecutarSelect(sql);
+        try {
+            return rs != null && rs.next();
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+        }
+    }
+
+    /**
+     * Marca una alerta como atendida y guarda el responsable (puede usarse para
+     * pasar de no atendida a atendida).
+     */
+    public void marcarAtendida(int idAlerta, String responsable) throws SQLException {
+        String sql = "UPDATE Alertas SET atendida = TRUE, responsable = '" + escape(responsable)
+                + "' WHERE id = " + idAlerta + ";";
+        System.out.println("DAOAlertas.marcarAtendida SQL: " + sql);
+        oConexion.ejecutar(sql);
+    }
+
+    /**
+     * Obtiene las alertas de un camión. Si id_camion == null devuelve todas. Si
+     * soloNoAtendidas == true filtra por atendida = FALSE.
+     */
+    public List<Alertas> findByCamion(Integer id_camion, boolean soloNoAtendidas) throws SQLException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT id, id_camion, fecha, responsable, atendida ");
+        sb.append("FROM Alertas ");
+        boolean whereAdded = false;
+        if (id_camion != null) {
+            sb.append("WHERE id_camion = ").append(id_camion).append(" ");
+            whereAdded = true;
+        }
+        if (soloNoAtendidas) {
+            sb.append(whereAdded ? "AND " : "WHERE ").append("atendida = FALSE ");
+        }
+        sb.append("ORDER BY id DESC;");
+
+        String sql = sb.toString();
+        System.out.println("DAOAlertas.findByCamion SQL: " + sql);
+
+        ResultSet rs = oConexion.ejecutarSelect(sql);
+        try {
+            List<Alertas> lista = new ArrayList<>();
+            while (rs != null && rs.next()) {
+                Alertas a = new Alertas();
+                a.setId(rs.getInt("id"));
+                a.setId_camion(rs.getInt("id_camion"));
+                a.setFecha(rs.getDate("fecha"));
+                a.setResponsable(rs.getString("responsable"));
+                a.setAtendida(rs.getBoolean("atendida"));
+                lista.add(a);
+            }
+            return lista;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+        }
+    }
+
+    public void insertarAlertaConPatente(int id_camion) throws SQLException {
+        // Usamos una subconsulta para traer la patente del camión y guardarla en responsable
+        String sql = "INSERT INTO Alertas (id_camion, fecha, responsable, atendida) "
+                + "SELECT c.id, CURDATE(), c.patente, FALSE "
+                + "FROM Camion c WHERE c.id = " + id_camion + ";";
+        System.out.println("DAOAlertas.insertarAlertaConPatente SQL: " + sql);
+        oConexion.ejecutar(sql);
     }
 }

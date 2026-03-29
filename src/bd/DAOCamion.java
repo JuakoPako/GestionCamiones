@@ -8,6 +8,7 @@ import java.util.List;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Camion;
+import java.sql.ResultSet;
 
 /**
  *
@@ -18,7 +19,7 @@ public class DAOCamion {
     private Conexion oConexion;
 
     public DAOCamion() throws SQLException {
-        oConexion = new Conexion("localhost", "gestion_camiones", "root", "");
+        oConexion = new Conexion("localhost", "gestion_camiones", "root", "1997");
     }
 
     public void crearCamion(Camion oCamion) throws SQLException {
@@ -175,6 +176,31 @@ public class DAOCamion {
             }
         }
         return false;
+    }
+
+    public model.Camion findById(int id) throws SQLException {
+        String sql = "SELECT id, patente, marca, modelo, anio, kilometraje, id_conductor FROM Camion WHERE id = " + id + " LIMIT 1;";
+        bd.Conexion con = bd.Conexion.getInstancia();
+        ResultSet rs = con.ejecutarSelect(sql);
+        try {
+            if (rs != null && rs.next()) {
+                model.Camion c = new model.Camion();
+                c.setIdCamion(rs.getInt("id"));
+                c.setPatenteCamion(rs.getString("patente"));
+                c.setMarca(rs.getString("marca"));
+                c.setModelo(rs.getString("modelo"));
+                c.setAnio(rs.getInt("anio"));
+                int km = rs.getInt("kilometraje");
+                c.setKilometraje(rs.wasNull() ? null : km);
+                c.setIdConductor(rs.getInt("id_conductor"));
+                return c;
+            }
+            return null;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+        }
     }
 
 }

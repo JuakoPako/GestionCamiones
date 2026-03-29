@@ -6,6 +6,7 @@ package app;
 
 import app.camiones.GestionCamiones;
 import app.mantenimiento.GestorMantenimiento;
+import app.alertas.GestionAlertas;
 import model.Sesion;
 
 /**
@@ -74,6 +75,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         });
 
         btnAlertas.setText("Alertas");
+        btnAlertas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlertasActionPerformed(evt);
+            }
+        });
 
         btnReportes.setText("Reportes");
 
@@ -141,6 +147,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
         gestionUsuario.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnGestionUsuariosActionPerformed
+
+    private void btnAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlertasActionPerformed
+        GestionAlertas gestionAlertas = new GestionAlertas();
+        gestionAlertas.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnAlertasActionPerformed
 
     /**
      * @param args the command line arguments

@@ -62,8 +62,18 @@ public class VerAlertas extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblAlertas);
 
         btnVolver.setText("Volver");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
 
         btnAtender.setText("Atender");
+        btnAtender.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtenderActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -108,8 +118,100 @@ public class VerAlertas extends javax.swing.JFrame {
     }//GEN-LAST:event_txtBuscarEntradaActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try {
+            String filtro = txtBuscarEntrada.getText().trim();
+            if (filtro.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Ingrese la ID del camión.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtBuscarEntrada.requestFocus();
+                return;
+            }
 
+            int idCamion;
+            try {
+                idCamion = Integer.parseInt(filtro);
+            } catch (NumberFormatException nfe) {
+                javax.swing.JOptionPane.showMessageDialog(this, "La ID debe ser numérica.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                txtBuscarEntrada.requestFocus();
+                return;
+            }
+
+            // Obtener camión y su kilometraje actual
+            bd.DAOCamion daoCam = new bd.DAOCamion();
+            model.Camion camion = daoCam.findById(idCamion);
+            if (camion == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "No existe camión con esa ID.", "Sin resultados", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            Integer kmActual = camion.getKilometraje();
+            if (kmActual == null) {
+                kmActual = 0;
+            }
+
+            // Lógica de creación automática de alerta si km >= 5000
+            final int UMBRAL = 5000;
+            bd.DAOAlertas daoA = new bd.DAOAlertas();
+
+            String patente = camion.getPatenteCamion(); // asegúrate de que Camion tenga getPatente()
+            if (kmActual >= UMBRAL) {
+                boolean existeNoAtendida = daoA.existeAlertaNoAtendida(idCamion);
+                if (!existeNoAtendida) {
+                    daoA.insertarAlerta(idCamion, patente == null ? "SIN_PATENTE" : patente);
+                    javax.swing.JOptionPane.showMessageDialog(this,
+                            "Se creó una alerta automática por kilometraje (" + kmActual + " km).",
+                            "Alerta creada", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+
+            // Cargar alertas del camión (todas)
+            java.util.List<model.Alertas> lista = daoA.findByCamion(idCamion, false);
+
+            // Construir modelo de tabla acorde a model.Alertas y la tabla DB
+            javax.swing.table.DefaultTableModel modelTbl = new javax.swing.table.DefaultTableModel() {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false; // tabla solo lectura
+                }
+            };
+            modelTbl.addColumn("ID");
+            modelTbl.addColumn("ID Camión");
+            modelTbl.addColumn("Fecha");
+            modelTbl.addColumn("Responsable");
+            modelTbl.addColumn("Atendida");
+
+            for (model.Alertas a : lista) {
+                Object[] fila = new Object[]{
+                    a.getId(),
+                    a.getId_camion(),
+                    a.getFecha(),
+                    a.getResponsable(),
+                    a.isAtendida()
+                };
+                modelTbl.addRow(fila);
+            }
+
+            tblAlertas.setModel(modelTbl);
+            tblAlertas.setAutoCreateRowSorter(true);
+
+            if (lista.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "No hay alertas registradas para este camión. Kilometraje: " + kmActual + ".", "Sin alertas", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (java.sql.SQLException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error BD: " + ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error inesperado: " + ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        GestionAlertas gestionAlertas = new GestionAlertas();
+        gestionAlertas.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnVolverActionPerformed
+
+    private void btnAtenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtenderActionPerformed
+
+    }//GEN-LAST:event_btnAtenderActionPerformed
 
     /**
      * @param args the command line arguments

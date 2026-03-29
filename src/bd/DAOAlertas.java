@@ -15,7 +15,7 @@ public class DAOAlertas {
 
     public DAOAlertas() throws SQLException {
         // Ajusta credenciales si tu proyecto las maneja distinto
-        oConexion = new Conexion("localhost", "gestion_camiones", "root", "1997");
+        oConexion = new Conexion("localhost", "gestion_camiones", "root", "");
     }
 
     private String escape(String s) {

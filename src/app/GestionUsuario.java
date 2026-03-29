@@ -113,8 +113,8 @@ public class GestionUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarCamionActionPerformed
 
     private void btnActualizarConductorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarConductorActionPerformed
-        ActualizarCamiones actualizarCamiones = new ActualizarCamiones();
-        actualizarCamiones.setVisible(true);
+        ActualizarConductor actualizarConductor = new ActualizarConductor();
+        actualizarConductor.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnActualizarConductorActionPerformed
 

@@ -19,7 +19,7 @@ public class DAOCamion {
     private Conexion oConexion;
 
     public DAOCamion() throws SQLException {
-        oConexion = new Conexion("localhost", "gestion_camiones", "root", "1997");
+        oConexion = new Conexion("localhost", "gestion_camiones", "root", "");
     }
 
     public void crearCamion(Camion oCamion) throws SQLException {

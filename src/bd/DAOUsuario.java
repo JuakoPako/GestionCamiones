@@ -25,7 +25,7 @@ public class DAOUsuario {
      Genera la conexion entregando los datos
      */
     public DAOUsuario() throws SQLException {
-        oConexion = new Conexion("localhost", "gestion_camiones", "root", "1997");
+        oConexion = new Conexion("localhost", "gestion_camiones", "root", "");
     }
 
     public void crearUsuario(Usuario oUsuario) throws SQLException {
@@ -44,7 +44,7 @@ public class DAOUsuario {
 
         String sql = "SELECT * FROM usuario WHERE nombre='"
                 + nombre + "' AND password='" + password + "';";
-        
+
         System.out.println(sql);
 
         oConexion.rs = oConexion.ejecutarSelect(sql);
@@ -64,13 +64,13 @@ public class DAOUsuario {
 
         return null;
     }
-    
+
     public ArrayList<Usuario> getListaUsuarios() throws SQLException {
         ArrayList<Usuario> lista = new ArrayList<>();
         String sql = "SELECT id, nombre, correo, rol from usuario;";
-        
+
         oConexion.rs = oConexion.ejecutarSelect(sql);
-        
+
         while (oConexion.rs.next()) {
             Usuario u = new Usuario();
             u.setIdUsuario(oConexion.rs.getInt(1));
@@ -80,16 +80,27 @@ public class DAOUsuario {
             lista.add(u);
         }
         oConexion.rs.close();
-        
+
         return lista;
     }
-    
-    
+
     public void borrarUsuario(int id) throws SQLException {
         String sql = "DELETE FROM usuario where id =" + id + ";";
         oConexion.ejecutar(sql);
         System.out.println(sql);
     }
-    
-    
+
+    public void actualizarUsuario(Usuario u) throws SQLException {
+
+        String sql = "UPDATE usuario SET "
+                + "nombre = '" + u.getNombre() + "', "
+                + "correo = '" + u.getCorreo() + "', "
+                + "password = '" + u.getPassword() + "', "
+                + "rol = '" + u.getRol() + "' "
+                + "WHERE id = " + u.getIdUsuario();
+
+        oConexion.ejecutar(sql);
+        System.out.println(sql);
+    }
+
 }

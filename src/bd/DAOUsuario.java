@@ -102,5 +102,23 @@ public class DAOUsuario {
         oConexion.ejecutar(sql);
         System.out.println(sql);
     }
+    
+    public ArrayList<Usuario> getListaConductores() throws SQLException {
+    ArrayList<Usuario> lista = new ArrayList<>();
+    
+    String sql = "SELECT id, nombre FROM usuario WHERE rol = 'CONDUCTOR';";
+
+    oConexion.rs = oConexion.ejecutarSelect(sql);
+
+    while (oConexion.rs.next()) {
+        Usuario u = new Usuario();
+        u.setIdUsuario(oConexion.rs.getInt("id"));
+        u.setNombre(oConexion.rs.getString("nombre"));
+        lista.add(u);
+    }
+    oConexion.rs.close();
+
+    return lista;
+}
 
 }

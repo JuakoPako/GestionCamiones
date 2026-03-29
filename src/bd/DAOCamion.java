@@ -4,11 +4,14 @@
  */
 package bd;
 
+import com.mysql.jdbc.PreparedStatement;
 import java.util.List;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Camion;
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -201,6 +204,43 @@ public class DAOCamion {
                 rs.close();
             }
         }
+    }
+
+    public ArrayList<Camion> getListaCamionesPorConductor(int idConductor) throws SQLException {
+        ArrayList<Camion> lista = new ArrayList<>();
+
+        String sql = "SELECT c.*, u.nombre AS nombre_conductor "
+                + "FROM camion c "
+                + "INNER JOIN usuario u ON c.id_conductor = u.id "
+                + "WHERE c.id_conductor = " + idConductor + ";";
+
+        oConexion.rs = oConexion.ejecutarSelect(sql);
+
+        while (oConexion.rs.next()) {
+            Camion c = new Camion();
+            c.setIdCamion(oConexion.rs.getInt("id"));
+            c.setPatenteCamion(oConexion.rs.getString("patente"));
+            c.setMarca(oConexion.rs.getString("marca"));
+            c.setModelo(oConexion.rs.getString("modelo"));
+            c.setAnio(oConexion.rs.getInt("anio"));
+            c.setKilometraje(oConexion.rs.getInt("kilometraje"));
+            c.setIdConductor(oConexion.rs.getInt("id_conductor"));
+
+            lista.add(c);
+        }
+        oConexion.rs.close();
+
+        return lista; // <--- ESTO ES LO QUE TE FALTA
+    }
+
+    public void sumarKilometraje(int idCamion, int kmsNuevos) throws SQLException {
+        // SQL que suma directamente en la base de datos
+        String sql = "UPDATE camion SET "
+                + "kilometraje = kilometraje + " + kmsNuevos + " "
+                + "WHERE id = " + idCamion + ";";
+
+        System.out.println(sql); // Para que veas la consulta en consola
+        oConexion.ejecutar(sql);
     }
 
 }

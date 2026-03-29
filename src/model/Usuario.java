@@ -67,6 +67,10 @@ public class Usuario {
         this.rol = rol;
     }
     
+    @Override
+    public String toString() {
+        return this.nombre;
+    }
     
     
 }

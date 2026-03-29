@@ -5,11 +5,14 @@
 package app.camiones;
 
 import bd.DAOCamion;
+import bd.DAOUsuario;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.Camion;
+import model.Usuario;
 
 /**
  *
@@ -22,6 +25,23 @@ public class AgregarCamion extends javax.swing.JFrame {
      */
     public AgregarCamion() {
         initComponents();
+        cargarComboConductores();
+    }
+
+    private void cargarComboConductores() {
+        try {
+            DAOUsuario daoUsuario = new DAOUsuario();
+
+            ArrayList<Usuario> lista = daoUsuario.getListaConductores();
+
+            cmbAsignado.removeAllItems();
+
+            for (Usuario u : lista) {
+                cmbAsignado.addItem(u);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AgregarCamion.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -45,6 +65,8 @@ public class AgregarCamion extends javax.swing.JFrame {
         lblKilometraje = new javax.swing.JLabel();
         txtKilometraje = new javax.swing.JTextField();
         btnOk = new javax.swing.JButton();
+        cmbAsignado = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -66,6 +88,15 @@ public class AgregarCamion extends javax.swing.JFrame {
                 btnOkActionPerformed(evt);
             }
         });
+
+        cmbAsignado.setToolTipText("");
+        cmbAsignado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbAsignadoActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Conductor Asignado");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -91,7 +122,15 @@ public class AgregarCamion extends javax.swing.JFrame {
                         .addGroup(layout.createSequentialGroup()
                             .addGap(268, 268, 268)
                             .addComponent(lblAgregarCamion))))
-                .addContainerGap(285, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(cmbAsignado, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(77, 77, 77)))
+                .addGap(96, 96, 96))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -106,10 +145,19 @@ public class AgregarCamion extends javax.swing.JFrame {
                 .addComponent(lblMarca)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
-                .addComponent(lblModelo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(lblModelo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(35, 35, 35)
+                                .addComponent(cmbAsignado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel1))))
                 .addGap(34, 34, 34)
                 .addComponent(lblAno)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -218,6 +266,9 @@ public class AgregarCamion extends javax.swing.JFrame {
             String Modelo = txtModelo.getText().trim();
             int Anio = Integer.parseInt(txtAno.getText().trim());
             int Kilometraje = Integer.parseInt(txtKilometraje.getText().trim());
+            Usuario ConductorAsignado = (Usuario) cmbAsignado.getSelectedItem();
+
+            int seleccionado = ConductorAsignado.getIdUsuario();
 
             DAOCamion oDAOCamion = new DAOCamion();
 
@@ -226,13 +277,14 @@ public class AgregarCamion extends javax.swing.JFrame {
                 txtPatente.requestFocus();
                 return;
             }
-            
+
             Camion nuevoCamion = new Camion();
             nuevoCamion.setPatenteCamion(Patente);
             nuevoCamion.setMarca(Marca);
             nuevoCamion.setModelo(Modelo);
             nuevoCamion.setAnio(Anio);
             nuevoCamion.setKilometraje(Kilometraje);
+            nuevoCamion.setIdConductor(seleccionado);
 
             oDAOCamion.crearCamion(nuevoCamion);
 
@@ -248,6 +300,10 @@ public class AgregarCamion extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_btnOkActionPerformed
+
+    private void cmbAsignadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAsignadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbAsignadoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -286,6 +342,8 @@ public class AgregarCamion extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnOk;
+    private javax.swing.JComboBox<model.Usuario> cmbAsignado;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblAgregarCamion;
     private javax.swing.JLabel lblAno;
     private javax.swing.JLabel lblKilometraje;

@@ -167,7 +167,7 @@ public class HistorialAlertas extends javax.swing.JFrame {
     private void refreshTableHistory(int idCamion) {
         try {
             bd.DAOAlertas daoA = new bd.DAOAlertas();
-            java.util.List<model.Alertas> lista = daoA.findHistoryByCamion(idCamion);
+            java.util.List<model.Alertas> lista = daoA.encontrarHistorialPorCamion(idCamion);
 
             javax.swing.table.DefaultTableModel modelTbl = new javax.swing.table.DefaultTableModel(
                     new Object[][]{}, new String[]{"ID", "ID Camión", "Fecha", "Responsable", "Atendida"}) {

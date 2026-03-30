@@ -6,15 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Alertas;
 
-/**
- * DAO para la tabla Alertas
- */
 public class DAOAlertas {
 
     private Conexion oConexion;
 
     public DAOAlertas() throws SQLException {
-        // Ajusta credenciales si tu proyecto las maneja distinto
         oConexion = new Conexion("localhost", "gestion_camiones", "root", "");
     }
 
@@ -66,7 +62,7 @@ public class DAOAlertas {
      * Obtiene las alertas de un camión. Si id_camion == null devuelve todas. Si
      * soloNoAtendidas == true filtra por atendida = FALSE.
      */
-    public List<Alertas> findByCamion(Integer id_camion, boolean soloNoAtendidas) throws SQLException {
+    public List<Alertas> encontrarPorCamion(Integer id_camion, boolean soloNoAtendidas) throws SQLException {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT id, id_camion, fecha, responsable, atendida ");
         sb.append("FROM Alertas ");
@@ -104,7 +100,6 @@ public class DAOAlertas {
     }
 
     public void insertarAlertaConPatente(int id_camion) throws SQLException {
-        // Usamos una subconsulta para traer la patente del camión y guardarla en responsable
         String sql = "INSERT INTO Alertas (id_camion, fecha, responsable, atendida) "
                 + "SELECT c.id, CURDATE(), c.patente, FALSE "
                 + "FROM Camion c WHERE c.id = " + id_camion + ";";
@@ -112,7 +107,7 @@ public class DAOAlertas {
         oConexion.ejecutar(sql);
     }
 
-    public java.util.List<model.Alertas> findHistoryByCamion(int idCamion) throws SQLException {
+    public java.util.List<model.Alertas> encontrarHistorialPorCamion(int idCamion) throws SQLException {
         java.util.ArrayList<model.Alertas> lista = new java.util.ArrayList<>();
         String sql = "SELECT id, id_camion, fecha, responsable, atendida "
                 + "FROM Alertas WHERE id_camion = " + idCamion + " "

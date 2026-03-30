@@ -34,12 +34,12 @@ public class MisCamiones extends javax.swing.JFrame {
         String[] columnas = {"ID CAMION", "Patente", "Marca", "Anio", "Kilometraje", "Conductor"};
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
 
-        // Verificamos que haya una sesión activa
+        
         if (Sesion.haySesion()) {
             int idLogueado = Sesion.getUsuario().getIdUsuario();
 
             DAOCamion daoCamion = new DAOCamion();
-            // Llamamos al nuevo método filtrado
+            
             ArrayList<Camion> camiones = daoCamion.getListaCamionesPorConductor(idLogueado);
 
             for (Camion c : camiones) {

@@ -32,7 +32,6 @@ public class VerAlertas extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAlertas = new javax.swing.JTable();
         btnVolver = new javax.swing.JButton();
-        btnAtender = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,13 +67,6 @@ public class VerAlertas extends javax.swing.JFrame {
             }
         });
 
-        btnAtender.setText("Atender");
-        btnAtender.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAtenderActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -82,7 +74,6 @@ public class VerAlertas extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAtender)
                     .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(txtBuscarEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -105,9 +96,7 @@ public class VerAlertas extends javax.swing.JFrame {
                     .addComponent(btnVolver))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnAtender)
-                .addContainerGap(276, Short.MAX_VALUE))
+                .addContainerGap(317, Short.MAX_VALUE))
         );
 
         pack();
@@ -171,7 +160,7 @@ public class VerAlertas extends javax.swing.JFrame {
             }
 
             // refrescar tabla
-            java.util.List<model.Alertas> lista = daoA.findByCamion(idCamion, false);
+            java.util.List<model.Alertas> lista = daoA.encontrarPorCamion(idCamion, false);
 
             javax.swing.table.DefaultTableModel modelTbl = new javax.swing.table.DefaultTableModel() {
                 @Override
@@ -209,10 +198,6 @@ public class VerAlertas extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
-    private void btnAtenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtenderActionPerformed
-
-    }//GEN-LAST:event_btnAtenderActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -249,7 +234,6 @@ public class VerAlertas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAtender;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnVolver;
     private javax.swing.JLabel jLabel1;

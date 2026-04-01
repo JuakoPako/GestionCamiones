@@ -8,6 +8,7 @@ import app.camiones.GestionCamiones;
 import app.mantenimiento.GestorMantenimiento;
 import app.alertas.GestionAlertas;
 import app.camiones.MisCamiones;
+import app.camiones.SimuladorKilometraje;
 import model.Sesion;
 import model.Usuario;
 
@@ -29,6 +30,8 @@ public class MenuPrincipal extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Debe iniciar sesión");
             this.dispose();
         }
+        
+        SimuladorKilometraje.iniciar();
 
     }
 

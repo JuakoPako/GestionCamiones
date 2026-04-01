@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import model.Camion;
 import model.Sesion;
@@ -20,26 +21,43 @@ import model.Sesion;
  * @author bevod
  */
 public class MisCamiones extends javax.swing.JFrame {
+    
+    private Timer refresco;
 
     public MisCamiones() {
         try {
             initComponents();
             MostrarCamionesEnTabla();
+            iniciarRefresco();
         } catch (SQLException ex) {
             Logger.getLogger(MisCamiones.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        
+
+    }
+
+    private void iniciarRefresco() {
+        refresco = new Timer(5000, e -> {
+            try {
+                MostrarCamionesEnTabla();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        refresco.start();
     }
 
     private void MostrarCamionesEnTabla() throws SQLException {
         String[] columnas = {"ID CAMION", "Patente", "Marca", "Anio", "Kilometraje", "Conductor"};
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
 
-        
         if (Sesion.haySesion()) {
             int idLogueado = Sesion.getUsuario().getIdUsuario();
 
             DAOCamion daoCamion = new DAOCamion();
-            
+
             ArrayList<Camion> camiones = daoCamion.getListaCamionesPorConductor(idLogueado);
 
             for (Camion c : camiones) {
@@ -166,44 +184,39 @@ public class MisCamiones extends javax.swing.JFrame {
 
     private void btnAnadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnadirActionPerformed
 
-
         int fila = tblCamiones.getSelectedRow();
         if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar un camión de la lista.");
             return;
         }
 
-        
         int idCamion = (int) tblCamiones.getValueAt(fila, 0);
 
         try {
-            
+
             int kmsNuevos = Integer.parseInt(txtKilometraje.getText().trim());
 
             DAOCamion dao = new DAOCamion();
 
-            
             dao.sumarKilometraje(idCamion, kmsNuevos);
 
-            
             model.Camion c = dao.findById(idCamion);
             int totalKM = c.getKilometraje();
 
-            if (totalKM >= 5000) {
-                
+            String mensaje = Alerta.generarMensajeAlerta(c.getPatenteCamion(), totalKM);
+
+            if (mensaje != null) {
+
                 JOptionPane.showMessageDialog(this,
-                        "⚠️ ¡MANTENCIÓN REQUERIDA! ⚠️\n\n"
-                        + "El camión con patente [" + c.getPatenteCamion() + "] ha superado el límite.\n"
-                        + "Kilometraje actual: " + totalKM + " km.\n\n"
-                        + "Por favor, revisa la sección de Alertas para más detalles.",
+                        mensaje,
                         "Alerta de Seguridad",
                         JOptionPane.WARNING_MESSAGE);
+
             } else {
-                
+
                 JOptionPane.showMessageDialog(this, "Kilometraje actualizado (+ " + kmsNuevos + " km)");
             }
 
-            
             txtKilometraje.setText("");
             MostrarCamionesEnTabla();
 

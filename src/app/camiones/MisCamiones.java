@@ -50,7 +50,7 @@ public class MisCamiones extends javax.swing.JFrame {
     }
 
     private void MostrarCamionesEnTabla() throws SQLException {
-        String[] columnas = {"ID CAMION", "Patente", "Marca", "Anio", "Kilometraje", "Conductor"};
+        String[] columnas = {"ID CAMION", "Patente", "Marca", "Anio", "Kilometraje", "Temperatura", "Conductor"};
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
 
         if (Sesion.haySesion()) {
@@ -61,12 +61,24 @@ public class MisCamiones extends javax.swing.JFrame {
             ArrayList<Camion> camiones = daoCamion.getListaCamionesPorConductor(idLogueado);
 
             for (Camion c : camiones) {
+                
+                double actual = c.getTemperatura();
+                
+                if(actual == 0) {
+                    actual = 70;
+                }
+                
+                double nuevaTemp = SimuladorTemperatura.generarTemperatura(actual, c.getKilometraje());
+                
+                c.setTemperatura(nuevaTemp);
+                
                 Object[] fila = {
                     c.getIdCamion(),
                     c.getPatenteCamion(),
                     c.getMarca(),
                     c.getAnio(),
                     c.getKilometraje(),
+                    String.format("%.1f °C", c.getTemperatura()),
                     Sesion.getUsuario().getNombre()
                 };
                 modelo.addRow(fila);

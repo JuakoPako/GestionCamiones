@@ -1,5 +1,6 @@
 
 import app.camiones.Alerta;
+import app.camiones.SimuladorTemperatura;
 import bd.DAOAlertas;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -18,11 +19,9 @@ public class testAlertas {
     public void testRequiereMantencion() {
         Alerta alerta = new Alerta();
 
-        
         assertTrue(alerta.requiereMantencion(5000));
         assertTrue(alerta.requiereMantencion(6000));
 
-        
         assertFalse(alerta.requiereMantencion(4999));
     }
 
@@ -49,5 +48,13 @@ public class testAlertas {
 
         assertNull(mensaje);
     }
-    
+
+    @Test
+    public void testTemperaturaNuncaSeSale() {
+        for (int i = 0; i < 100; i++) {
+            double temp = SimuladorTemperatura.generarTemperatura(70, 1000);
+            assertTrue(temp >= 60 && temp <= 110);
+        }
+    }
+
 }

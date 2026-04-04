@@ -20,6 +20,7 @@ public class Camion {
     private int kilometraje;
     private BigDecimal combustibleActual;
     private int idConductor;
+    private double temperatura;
 
     public Camion() {
     }
@@ -98,4 +99,14 @@ public class Camion {
     public void setIdConductor(int idConductor) {
         this.idConductor = idConductor;
     }
+
+    public double getTemperatura() {
+        return temperatura;
+    }
+
+    public void setTemperatura(double temperatura) {
+        this.temperatura = temperatura;
+    }
+    
+    
 }

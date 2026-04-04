@@ -9,6 +9,7 @@ import app.mantenimiento.GestorMantenimiento;
 import app.alertas.GestionAlertas;
 import app.camiones.MisCamiones;
 import app.camiones.SimuladorKilometraje;
+import app.camiones.SimuladorTemperatura;
 import model.Sesion;
 import model.Usuario;
 
@@ -32,6 +33,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         }
         
         SimuladorKilometraje.iniciar();
+        SimuladorTemperatura.iniciar();
 
     }
 

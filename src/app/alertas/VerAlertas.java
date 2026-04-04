@@ -4,17 +4,32 @@
  */
 package app.alertas;
 
+import bd.DAOCamion;
+import bd.DAOAlertas;
+import model.Alertas;
+import model.Camion;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.sql.SQLException;
+import java.util.List;
+
 /**
  *
  * @author Franco
  */
 public class VerAlertas extends javax.swing.JFrame {
 
-    /**
-     * Creates new form VerAlertas
-     */
+    private DAOAlertas daoA;
     public VerAlertas() {
         initComponents();
+        try {
+            daoA = new DAOAlertas();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error inicializando DAOAlertas: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            daoA = null;
+        }
     }
 
     /**
@@ -52,10 +67,10 @@ public class VerAlertas extends javax.swing.JFrame {
 
         tblAlertas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null}
+                {null, null, null, null}
             },
             new String [] {
-                "ID", "ID Camion", "Fecha", "Responsable", "Atendida"
+                "ID", "ID Camion", "Fecha", "Tipo"
             }
         ));
         jScrollPane1.setViewportView(tblAlertas);
@@ -110,7 +125,7 @@ public class VerAlertas extends javax.swing.JFrame {
         try {
             String filtro = txtBuscarEntrada.getText().trim();
             if (filtro.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Ingrese la ID del camión.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ingrese la ID del camión.", "Validación", JOptionPane.WARNING_MESSAGE);
                 txtBuscarEntrada.requestFocus();
                 return;
             }
@@ -119,15 +134,16 @@ public class VerAlertas extends javax.swing.JFrame {
             try {
                 idCamion = Integer.parseInt(filtro);
             } catch (NumberFormatException nfe) {
-                javax.swing.JOptionPane.showMessageDialog(this, "La ID debe ser numérica.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "La ID debe ser numérica.", "Validación", JOptionPane.WARNING_MESSAGE);
                 txtBuscarEntrada.requestFocus();
                 return;
             }
 
-            bd.DAOCamion daoCam = new bd.DAOCamion();
-            model.Camion camion = daoCam.findById(idCamion);
+            // Obtener camión
+            DAOCamion daoCam = new DAOCamion();
+            Camion camion = daoCam.findById(idCamion);
             if (camion == null) {
-                javax.swing.JOptionPane.showMessageDialog(this, "No existe camión con esa ID.", "Sin resultados", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No existe camión con esa ID.", "Sin resultados", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
@@ -136,59 +152,72 @@ public class VerAlertas extends javax.swing.JFrame {
                 kmActual = 0;
             }
 
-            // DEBUG: imprimir datos del camión
-            System.out.println("DEBUG: idCamion=" + idCamion + " kmActual=" + kmActual + " patente='" + camion.getPatenteCamion() + "'");
-
+            // Umbral para generar alerta por kilometraje
             final int UMBRAL = 5000;
-            bd.DAOAlertas daoA = new bd.DAOAlertas();
 
+            // Inicializar DAOAlertas si hace falta
+            if (daoA == null) {
+                daoA = new DAOAlertas();
+            }
+
+            // Si supera umbral, crear alerta tipo KILOMETRAJE si no existe una no atendida del mismo tipo
             if (kmActual >= UMBRAL) {
-                boolean existeNoAtendida = daoA.existeAlertaNoAtendida(idCamion);
-                System.out.println("DEBUG: existeAlertaNoAtendida=" + existeNoAtendida);
+                boolean existeNoAtendida = false;
+                try {
+                    // Preferimos método por tipo para evitar duplicados por otros motivos
+                    existeNoAtendida = daoA.existeAlertaNoAtendidaPorTipo(idCamion, "KILOMETRAJE");
+                } catch (SQLException ex) {
+                    
+                }
+
                 if (!existeNoAtendida) {
-                    // usar la patente que viene en el objeto Camion
                     String patente = camion.getPatenteCamion();
                     String responsableParaInsert = (patente != null && !patente.trim().isEmpty()) ? patente.trim() : "SIN_PATENTE";
-                    System.out.println("DEBUG: insertando alerta con responsable='" + responsableParaInsert + "'");
-                    daoA.CrearAlerta(idCamion, responsableParaInsert);
-                    javax.swing.JOptionPane.showMessageDialog(this,
+                    // Crear alerta del tipo KILOMETRAJE
+                    daoA.crearAlerta(idCamion, "KILOMETRAJE");
+                    JOptionPane.showMessageDialog(this,
                             "Se creó una alerta automática por kilometraje (" + kmActual + " km).",
-                            "Alerta creada", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    System.out.println("DEBUG: no se inserta alerta porque ya existe una no atendida");
+                            "Alerta creada", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
 
-            // refrescar tabla
-            java.util.List<model.Alertas> lista = daoA.encontrarPorCamion(idCamion, false);
+            // Refrescar tabla con alertas del camión (incluye tipo)
+            List<Alertas> lista = daoA.encontrarPorCamion(idCamion, filtro);
 
-            javax.swing.table.DefaultTableModel modelTbl = new javax.swing.table.DefaultTableModel() {
+            DefaultTableModel modelTbl = new DefaultTableModel(
+                    new Object[][]{}, new String[]{"ID", "ID Camión", "Fecha", "Tipo", "Responsable", "Atendida"}) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
                     return false;
                 }
-            };
-            modelTbl.addColumn("ID");
-            modelTbl.addColumn("ID Camión");
-            modelTbl.addColumn("Fecha");
-            modelTbl.addColumn("Responsable");
-            modelTbl.addColumn("Atendida");
 
-            for (model.Alertas a : lista) {
-                modelTbl.addRow(new Object[]{a.getId(), a.getId_camion(), a.getFecha(), a.getResponsable(), a.isAtendida()});
+                @Override
+                public Class<?> getColumnClass(int columnIndex) {
+                    if (columnIndex == 0 || columnIndex == 1) {
+                        return Integer.class;
+                    }
+                    if (columnIndex == 5) {
+                        return Boolean.class;
+                    }
+                    return Object.class;
+                }
+            };
+
+            for (Alertas a : lista) {
+                modelTbl.addRow(new Object[]{a.getId(), a.getId_camion(), a.getFecha(), a.getTipo()});
             }
 
             tblAlertas.setModel(modelTbl);
             tblAlertas.setAutoCreateRowSorter(true);
 
             if (lista.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "No hay alertas registradas para este camión. Kilometraje: " + kmActual + ".", "Sin alertas", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No hay alertas registradas para este camión. Kilometraje: " + kmActual + ".", "Sin alertas", JOptionPane.INFORMATION_MESSAGE);
             }
 
-        } catch (java.sql.SQLException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error BD: " + ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error BD: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error inesperado: " + ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error inesperado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 

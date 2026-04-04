@@ -54,7 +54,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         btnGestionCamiones = new javax.swing.JButton();
         btnMantenimiento = new javax.swing.JButton();
         btnAlertas = new javax.swing.JButton();
-        btnReportes = new javax.swing.JButton();
         btnCerrarSesion = new javax.swing.JButton();
         btnMisCamiones = new javax.swing.JButton();
 
@@ -90,8 +89,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
             }
         });
 
-        btnReportes.setText("Reportes");
-
         btnCerrarSesion.setText("Cerrar Sesion");
         btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -111,25 +108,24 @@ public class MenuPrincipal extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(268, 268, 268)
-                        .addComponent(btnCerrarSesion))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(288, 288, 288)
-                        .addComponent(lblUsuario)))
-                .addContainerGap(273, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnGestionUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGestionCamiones)
                     .addComponent(btnMantenimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAlertas, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAlertas, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnMisCamiones)
                 .addGap(65, 65, 65))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(288, 288, 288)
+                        .addComponent(lblUsuario))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(262, 262, 262)
+                        .addComponent(btnCerrarSesion)))
+                .addContainerGap(279, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -146,11 +142,9 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 .addComponent(btnMantenimiento)
                 .addGap(37, 37, 37)
                 .addComponent(btnAlertas)
-                .addGap(37, 37, 37)
-                .addComponent(btnReportes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
                 .addComponent(btnCerrarSesion)
-                .addGap(38, 38, 38))
+                .addGap(40, 40, 40))
         );
 
         pack();
@@ -237,7 +231,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnGestionUsuarios;
     private javax.swing.JButton btnMantenimiento;
     private javax.swing.JButton btnMisCamiones;
-    private javax.swing.JButton btnReportes;
     private javax.swing.JLabel lblUsuario;
     // End of variables declaration//GEN-END:variables
 }

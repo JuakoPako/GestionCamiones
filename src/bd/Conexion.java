@@ -1,45 +1,36 @@
 package bd;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-import java.sql.Connection; // Clase para poder conectar
-import java.sql.Statement; // Clase para enviar consultas SQL
-import java.sql.ResultSet; // Clase para obtener los datos o resultados de
-// un select
-import java.sql.SQLException; // Para manejar excepciones de SQL
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 
 public class Conexion {
 
-    private Connection con;
+    private Connection con;                
+    private MysqlDataSource dataSource;   
     public Statement sen;
     public ResultSet rs;
 
     public Conexion(String server, String bd, String user, String pass) throws SQLException {
-        MysqlDataSource mysql = new MysqlDataSource();
-        mysql.setServerName(server);
-        mysql.setDatabaseName(bd);
-        mysql.setUser(user);
-        mysql.setPassword(pass);
+        dataSource = new MysqlDataSource();
+        dataSource.setServerName(server);
+        dataSource.setDatabaseName(bd);
+        dataSource.setUser(user);
+        dataSource.setPassword(pass);
 
-        con = mysql.getConnection();
+        con = dataSource.getConnection();
     }
 
-    /**
-     *
-     * @param sql - Puede ser un Delete, Update o Insert
-     * @throws java.sql.SQLException
-     */
+
     public void ejecutar(String sql) throws SQLException {
         sen = con.createStatement();
         sen.executeUpdate(sql);
         sen.close();
     }
 
-    /**
-     *
-     * @param select consulta select
-     * @return un opbjeto del Tipo ResultSet
-     * @throws SQLException
-     */
     public ResultSet ejecutarSelect(String select) throws SQLException {
         sen = con.createStatement();
         rs = sen.executeQuery(select);
@@ -48,24 +39,31 @@ public class Conexion {
 
     private static Conexion instancia = null;
 
-    /**
-     * Devuelve la instancia singleton de Conexion. Busca parámetros en
-     * propiedades del sistema (db.server, db.name, db.user, db.pass) o en
-     * variables de entorno (DB_SERVER, DB_NAME, DB_USER, DB_PASS).
-     *
-     * Lanza SQLException si faltan parámetros o si la creación falla.
-     */
-
     public static Conexion getInstancia() throws SQLException {
         if (instancia == null) {
-            // Valores temporales para pruebas locales
             String server = "localhost";
             String bd = "gestion_camiones";
             String user = "root";
-            String pass = "";
+            String pass = "1997";
             instancia = new Conexion(server, bd, user, pass);
         }
         return instancia;
     }
 
+    public Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
+    }
+
+    public void close() {
+        try {
+            if (rs != null && !rs.isClosed()) rs.close();
+        } catch (Exception ignore) {}
+        try {
+            if (sen != null) sen.close();
+        } catch (Exception ignore) {}
+        try {
+            if (con != null && !con.isClosed()) con.close();
+        } catch (Exception ignore) {}
+        con = null;
+    }
 }

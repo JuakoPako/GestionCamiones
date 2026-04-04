@@ -1,17 +1,25 @@
 package bd;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import model.Mantenimiento;
 
+/**
+ * DAOMantenimiento seguro: usa Conexion.getInstancia(), PreparedStatement y try-with-resources.
+ */
 public class DAOMantenimiento {
 
     private Conexion oConexion;
 
     public DAOMantenimiento() throws SQLException {
-        oConexion = new Conexion("localhost", "gestion_camiones", "root", "1997");
+        oConexion = Conexion.getInstancia();
     }
 
     private String escape(String s) {
@@ -21,162 +29,212 @@ public class DAOMantenimiento {
         return s.replace("'", "''");
     }
 
+    /**
+     * Inserta un mantenimiento de forma no transaccional (abre su propia conexión).
+     * Mantiene compatibilidad con el método antiguo crearMantenimiento.
+     */
     public void crearMantenimiento(Mantenimiento m) throws SQLException {
-        if (m == null) {
-            throw new SQLException("Objeto Mantenimiento nulo.");
-        }
+        if (m == null) throw new SQLException("Objeto Mantenimiento nulo.");
 
-        StringBuilder sql = new StringBuilder();
-        sql.append("INSERT INTO Mantenimiento (id_camion, fecha, motivo, descripcion) VALUES (");
+        String sql = "INSERT INTO Mantenimiento (id_camion, fecha, motivo, descripcion, id_alerta_original) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = oConexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-        sql.append(m.getIdCamion()).append(", ");
+            ps.setInt(1, m.getIdCamion());
+            if (m.getFecha() != null) ps.setDate(2, new Date(m.getFecha().getTime()));
+            else ps.setNull(2, Types.DATE);
 
-        if (m.getFecha() != null) {
-            java.sql.Date d = new java.sql.Date(m.getFecha().getTime());
-            sql.append("'").append(d.toString()).append("', ");
-        } else {
-            sql.append("NULL, ");
-        }
+            ps.setString(3, m.getMotivo());
+            if (m.getDescripcion() != null && !m.getDescripcion().isEmpty()) ps.setString(4, m.getDescripcion());
+            else ps.setNull(4, Types.VARCHAR);
 
-        sql.append("'").append(escape(m.getMotivo())).append("', ");
-
-        if (m.getDescripcion() != null && !m.getDescripcion().isEmpty()) {
-            sql.append("'").append(escape(m.getDescripcion())).append("'");
-        } else {
-            sql.append("NULL");
-        }
-
-        sql.append(");");
-
-        System.out.println("DAOMantenimiento.crearMantenimiento SQL: " + sql.toString());
-        oConexion.ejecutar(sql.toString());
-    }
-
-    public void actualizarMantenimiento(Mantenimiento m) throws SQLException {
-        if (m == null) {
-            throw new SQLException("Objeto Mantenimiento nulo.");
-        }
-        if (m.getId() == null || m.getId() <= 0) {
-            throw new SQLException("ID de mantenimiento inválido para actualizar.");
-        }
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("UPDATE Mantenimiento SET ");
-
-        sql.append("id_camion = ").append(m.getIdCamion()).append(", ");
-
-        if (m.getFecha() != null) {
-            java.sql.Date d = new java.sql.Date(m.getFecha().getTime());
-            sql.append("fecha = '").append(d.toString()).append("', ");
-        } else {
-            sql.append("fecha = NULL, ");
-        }
-
-        sql.append("motivo = '").append(escape(m.getMotivo())).append("', ");
-
-        if (m.getDescripcion() != null && !m.getDescripcion().isEmpty()) {
-            sql.append("descripcion = '").append(escape(m.getDescripcion())).append("' ");
-        } else {
-            sql.append("descripcion = NULL ");
-        }
-
-        sql.append("WHERE id = ").append(m.getId()).append(";");
-
-        System.out.println("DAOMantenimiento.actualizarMantenimiento SQL: " + sql.toString());
-        oConexion.ejecutar(sql.toString());
-    }
-
-
-    public Mantenimiento encontrarPorId(int id) throws SQLException {
-        String sql = "SELECT id, id_camion, fecha, motivo, descripcion FROM Mantenimiento WHERE id = " + id + " LIMIT 1;";
-        ResultSet rs = oConexion.ejecutarSelect(sql);
-        try {
-            if (rs != null && rs.next()) {
-                Mantenimiento m = new Mantenimiento();
-                m.setId(rs.getInt("id"));
-                m.setIdCamion(rs.getInt("id_camion"));
-                java.sql.Date fecha = rs.getDate("fecha");
-                m.setFecha(fecha);
-                m.setMotivo(rs.getString("motivo"));
-                m.setDescripcion(rs.getString("descripcion"));
-                return m;
+            // Si tu modelo tiene id_alerta_original; si no, se inserta NULL
+            try {
+                Integer idAlerta = (Integer) Mantenimiento.class.getMethod("getId_alerta_original").invoke(m);
+                if (idAlerta != null) ps.setInt(5, idAlerta);
+                else ps.setNull(5, Types.INTEGER);
+            } catch (NoSuchMethodException nsme) {
+                ps.setNull(5, Types.INTEGER);
+            } catch (Exception e) {
+                // si la reflexión falla, dejar NULL
+                ps.setNull(5, Types.INTEGER);
             }
-            return null;
-        } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    /* ignore */ }
-            }
-        }
-    }
 
-
-    public Mantenimiento encontrarPorCamion(int idCamion) throws SQLException {
-        String sql = "SELECT id, id_camion, fecha, motivo, descripcion "
-                + "FROM Mantenimiento WHERE id_camion = " + idCamion
-                + " ORDER BY fecha DESC LIMIT 1;";
-        ResultSet rs = oConexion.ejecutarSelect(sql);
-        try {
-            if (rs != null && rs.next()) {
-                Mantenimiento m = new Mantenimiento();
-                m.setId(rs.getInt("id"));
-                m.setIdCamion(rs.getInt("id_camion"));
-                java.sql.Date fecha = rs.getDate("fecha");
-                m.setFecha(fecha);
-                m.setMotivo(rs.getString("motivo"));
-                m.setDescripcion(rs.getString("descripcion"));
-                return m;
-            }
-            return null;
-        } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    /* ignore */ }
-            }
-        }
-    }
-
-
-    public List<Mantenimiento> encontrarTodos(Integer idCamion) throws SQLException {
-        String sql;
-        if (idCamion == null) {
-            sql = "SELECT id, id_camion, fecha, motivo, descripcion FROM Mantenimiento ORDER BY fecha DESC;";
-        } else {
-            sql = "SELECT id, id_camion, fecha, motivo, descripcion "
-                    + "FROM Mantenimiento WHERE id_camion = " + idCamion + " ORDER BY fecha DESC;";
-        }
-
-        ResultSet rs = oConexion.ejecutarSelect(sql);
-        try {
-            List<Mantenimiento> lista = new ArrayList<>();
-            while (rs != null && rs.next()) {
-                Mantenimiento m = new Mantenimiento();
-                m.setId(rs.getInt("id"));
-                m.setIdCamion(rs.getInt("id_camion"));
-                java.sql.Date fecha = rs.getDate("fecha");
-                m.setFecha(fecha);
-                m.setMotivo(rs.getString("motivo"));
-                m.setDescripcion(rs.getString("descripcion"));
-                lista.add(m);
-            }
-            return lista;
-        } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
+            ps.executeUpdate();
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    m.setId(keys.getInt(1));
                 }
             }
         }
     }
 
+    /**
+     * Actualiza un mantenimiento (no transaccional).
+     */
+    public void actualizarMantenimiento(Mantenimiento m) throws SQLException {
+        if (m == null) throw new SQLException("Objeto Mantenimiento nulo.");
+        if (m.getId() == null || m.getId() <= 0) throw new SQLException("ID de mantenimiento inválido para actualizar.");
+
+        String sql = "UPDATE Mantenimiento SET id_camion = ?, fecha = ?, motivo = ?, descripcion = ? WHERE id = ?";
+        try (Connection conn = oConexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, m.getIdCamion());
+            if (m.getFecha() != null) ps.setDate(2, new Date(m.getFecha().getTime()));
+            else ps.setNull(2, Types.DATE);
+
+            ps.setString(3, m.getMotivo());
+            if (m.getDescripcion() != null && !m.getDescripcion().isEmpty()) ps.setString(4, m.getDescripcion());
+            else ps.setNull(4, Types.VARCHAR);
+
+            ps.setInt(5, m.getId());
+
+            int affected = ps.executeUpdate();
+            if (affected == 0) {
+                throw new SQLException("No se actualizó el mantenimiento (id no encontrado): " + m.getId());
+            }
+        }
+    }
+
+    /**
+     * Buscar por id (no transaccional).
+     */
+    public Mantenimiento encontrarPorId(int id) throws SQLException {
+        String sql = "SELECT id, id_camion, fecha, motivo, descripcion FROM Mantenimiento WHERE id = ? LIMIT 1";
+        try (Connection conn = oConexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Mantenimiento m = new Mantenimiento();
+                    m.setId(rs.getInt("id"));
+                    m.setIdCamion(rs.getInt("id_camion"));
+                    java.sql.Date fecha = rs.getDate("fecha");
+                    m.setFecha(fecha == null ? null : new java.util.Date(fecha.getTime()));
+                    m.setMotivo(rs.getString("motivo"));
+                    m.setDescripcion(rs.getString("descripcion"));
+                    return m;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Devuelve el último mantenimiento por camión (no transaccional).
+     */
+    public Mantenimiento encontrarPorCamion(int idCamion) throws SQLException {
+        String sql = "SELECT id, id_camion, fecha, motivo, descripcion FROM Mantenimiento WHERE id_camion = ? ORDER BY fecha DESC LIMIT 1";
+        try (Connection conn = oConexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idCamion);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Mantenimiento m = new Mantenimiento();
+                    m.setId(rs.getInt("id"));
+                    m.setIdCamion(rs.getInt("id_camion"));
+                    java.sql.Date fecha = rs.getDate("fecha");
+                    m.setFecha(fecha == null ? null : new java.util.Date(fecha.getTime()));
+                    m.setMotivo(rs.getString("motivo"));
+                    m.setDescripcion(rs.getString("descripcion"));
+                    return m;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Lista todos los mantenimientos o los de un camión (no transaccional).
+     */
+    public List<Mantenimiento> encontrarTodos(Integer idCamion) throws SQLException {
+        String sql;
+        if (idCamion == null) {
+            sql = "SELECT id, id_camion, fecha, motivo, descripcion FROM Mantenimiento ORDER BY fecha DESC";
+            try (Connection conn = oConexion.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql);
+                 ResultSet rs = ps.executeQuery()) {
+                List<Mantenimiento> lista = new ArrayList<>();
+                while (rs.next()) {
+                    Mantenimiento m = new Mantenimiento();
+                    m.setId(rs.getInt("id"));
+                    m.setIdCamion(rs.getInt("id_camion"));
+                    java.sql.Date fecha = rs.getDate("fecha");
+                    m.setFecha(fecha == null ? null : new java.util.Date(fecha.getTime()));
+                    m.setMotivo(rs.getString("motivo"));
+                    m.setDescripcion(rs.getString("descripcion"));
+                    lista.add(m);
+                }
+                return lista;
+            }
+        } else {
+            sql = "SELECT id, id_camion, fecha, motivo, descripcion FROM Mantenimiento WHERE id_camion = ? ORDER BY fecha DESC";
+            try (Connection conn = oConexion.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, idCamion);
+                try (ResultSet rs = ps.executeQuery()) {
+                    List<Mantenimiento> lista = new ArrayList<>();
+                    while (rs.next()) {
+                        Mantenimiento m = new Mantenimiento();
+                        m.setId(rs.getInt("id"));
+                        m.setIdCamion(rs.getInt("id_camion"));
+                        java.sql.Date fecha = rs.getDate("fecha");
+                        m.setFecha(fecha == null ? null : new java.util.Date(fecha.getTime()));
+                        m.setMotivo(rs.getString("motivo"));
+                        m.setDescripcion(rs.getString("descripcion"));
+                        lista.add(m);
+                    }
+                    return lista;
+                }
+            }
+        }
+    }
+
+    /**
+     * Borra mantenimiento (no transaccional).
+     */
     public void borrarMantenimiento(int id) throws SQLException {
-        String sql = "DELETE FROM Mantenimiento WHERE id = " + id + ";";
-        System.out.println("DAOMantenimiento.borrarMantenimiento SQL: " + sql);
-        oConexion.ejecutar(sql);
+        String sql = "DELETE FROM Mantenimiento WHERE id = ?";
+        try (Connection conn = oConexion.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            int affected = ps.executeUpdate();
+            if (affected == 0) {
+                throw new SQLException("No se borró el mantenimiento (id no encontrado): " + id);
+            }
+        }
+    }
+
+    /**
+     * Inserta mantenimiento usando la Connection proporcionada (transaccional).
+     * Mantiene la firma que ya tenías.
+     */
+    public void insertarMantenimiento(Connection conn, Mantenimiento m) throws SQLException {
+        String sql = "INSERT INTO Mantenimiento (id_camion, fecha, motivo, descripcion, id_alerta_original) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, m.getIdCamion());
+            if (m.getFecha() != null) {
+                ps.setDate(2, new Date(m.getFecha().getTime())); // java.sql.Date
+            } else {
+                ps.setDate(2, new Date(System.currentTimeMillis()));
+            }
+            ps.setString(3, m.getMotivo());
+            ps.setString(4, m.getDescripcion());
+            // id_alerta_original puede ser null
+            try {
+                Integer idAlerta = (Integer) Mantenimiento.class.getMethod("getId_alerta_original").invoke(m);
+                if (idAlerta != null) ps.setInt(5, idAlerta);
+                else ps.setNull(5, Types.INTEGER);
+            } catch (NoSuchMethodException nsme) {
+                ps.setNull(5, Types.INTEGER);
+            } catch (Exception e) {
+                ps.setNull(5, Types.INTEGER);
+            }
+            ps.executeUpdate();
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) m.setId(keys.getInt(1));
+            }
+        }
     }
 }

@@ -4,6 +4,8 @@
  */
 package model;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author bevod
@@ -16,18 +18,20 @@ public class Camion {
     private String modelo;
     private int anio;
     private int kilometraje;
+    private BigDecimal combustibleActual;
     private int idConductor;
 
     public Camion() {
     }
 
-    public Camion(int idCamion, String patenteCamion, String marca, String modelo, int anio, int kilometraje, int idConductor) {
+    public Camion(int idCamion, String patenteCamion, String marca, String modelo, int anio, int kilometraje, BigDecimal combustibleActual, int idConductor) {
         this.idCamion = idCamion;
         this.patenteCamion = patenteCamion;
         this.marca = marca;
         this.modelo = modelo;
         this.anio = anio;
         this.kilometraje = kilometraje;
+        this.combustibleActual = combustibleActual;
         this.idConductor = idConductor;
     }
 
@@ -77,6 +81,14 @@ public class Camion {
 
     public void setKilometraje(int kilometraje) {
         this.kilometraje = kilometraje;
+    }
+
+    public BigDecimal getCombustibleActual() {
+        return combustibleActual;
+    }
+
+    public void setCombustibleActual(BigDecimal combustibleActual) {
+        this.combustibleActual = combustibleActual;
     }
 
     public int getIdConductor() {

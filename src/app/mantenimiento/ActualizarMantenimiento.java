@@ -213,9 +213,9 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
             }
 
             bd.DAOMantenimiento dao = new bd.DAOMantenimiento();
-            model.Mantenimiento m = dao.findById(val);
+            model.Mantenimiento m = dao.encontrarPorId(val);
             if (m == null) {
-                m = dao.findByCamion(val); // intenta por id_camion
+                m = dao.encontrarPorCamion(val); // intenta por id_camion
             }
             if (m == null) {
                 limpiarCampos();

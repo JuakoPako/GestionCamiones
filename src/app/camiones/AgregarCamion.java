@@ -178,7 +178,6 @@ public class AgregarCamion extends javax.swing.JFrame {
         String marca = txtMarca.getText().trim();
         String modelo = txtModelo.getText().trim();
         String anioStr = txtAno.getText().trim();
-        String kmStr = txtKilometraje.getText().trim();
 
         if (patente.isEmpty()) {
             mostrarError(txtPatente, "La patente es obligatoria");
@@ -215,21 +214,7 @@ public class AgregarCamion extends javax.swing.JFrame {
             return false;
         }
 
-        if (kmStr.isEmpty()) {
-            mostrarError(txtKilometraje, "El kilometraje es obligatorio");
-            return false;
-        }
-        int km;
-        try {
-            km = Integer.parseInt(kmStr);
-        } catch (NumberFormatException e) {
-            mostrarError(txtKilometraje, "Kilometraje debe ser un número entero");
-            return false;
-        }
-        if (km < 0) {
-            mostrarError(txtKilometraje, "Kilometraje no puede ser negativo");
-            return false;
-        }
+        
 
         // Si todo OK, limpiar errores visuales
         limpiarErrores();
@@ -252,8 +237,6 @@ public class AgregarCamion extends javax.swing.JFrame {
         txtModelo.setToolTipText(null);
         txtAno.setBorder(defaultBorder);
         txtAno.setToolTipText(null);
-        txtKilometraje.setBorder(defaultBorder);
-        txtKilometraje.setToolTipText(null);
     }
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
@@ -265,7 +248,6 @@ public class AgregarCamion extends javax.swing.JFrame {
             String Marca = txtMarca.getText().trim();
             String Modelo = txtModelo.getText().trim();
             int Anio = Integer.parseInt(txtAno.getText().trim());
-            int Kilometraje = Integer.parseInt(txtKilometraje.getText().trim());
             Usuario ConductorAsignado = (Usuario) cmbAsignado.getSelectedItem();
 
             int seleccionado = ConductorAsignado.getIdUsuario();
@@ -283,7 +265,6 @@ public class AgregarCamion extends javax.swing.JFrame {
             nuevoCamion.setMarca(Marca);
             nuevoCamion.setModelo(Modelo);
             nuevoCamion.setAnio(Anio);
-            nuevoCamion.setKilometraje(Kilometraje);
             nuevoCamion.setIdConductor(seleccionado);
 
             oDAOCamion.crearCamion(nuevoCamion);

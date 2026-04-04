@@ -150,7 +150,7 @@ public class VerAlertas extends javax.swing.JFrame {
                     String patente = camion.getPatenteCamion();
                     String responsableParaInsert = (patente != null && !patente.trim().isEmpty()) ? patente.trim() : "SIN_PATENTE";
                     System.out.println("DEBUG: insertando alerta con responsable='" + responsableParaInsert + "'");
-                    daoA.insertarAlerta(idCamion, responsableParaInsert);
+                    daoA.CrearAlerta(idCamion, responsableParaInsert);
                     javax.swing.JOptionPane.showMessageDialog(this,
                             "Se creó una alerta automática por kilometraje (" + kmActual + " km).",
                             "Alerta creada", javax.swing.JOptionPane.INFORMATION_MESSAGE);

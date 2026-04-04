@@ -1,30 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.util.Date;
+
 
 public class Mantenimiento {
 
     private Integer id;
     private int idCamion;
     private Date fecha;
-    private String tipo;
+    private String motivo; 
     private String descripcion;
-    private Integer kilometraje;
 
     public Mantenimiento() {
     }
 
-    public Mantenimiento(Integer id, int idCamion, Date fecha, String tipo, String descripcion, Integer kilometraje) {
+    public Mantenimiento(Integer id, int idCamion, Date fecha, String motivo, String descripcion) {
         this.id = id;
         this.idCamion = idCamion;
         this.fecha = fecha;
-        this.tipo = tipo;
+        this.motivo = motivo;
         this.descripcion = descripcion;
-        this.kilometraje = kilometraje;
     }
 
     public Integer getId() {
@@ -51,12 +46,12 @@ public class Mantenimiento {
         this.fecha = fecha;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getMotivo() {
+        return motivo;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
     }
 
     public String getDescripcion() {
@@ -67,22 +62,14 @@ public class Mantenimiento {
         this.descripcion = descripcion;
     }
 
-    public Integer getKilometraje() {
-        return kilometraje;
-    }
-
-    public void setKilometraje(Integer kilometraje) {
-        this.kilometraje = kilometraje;
-    }
-
+    @Override
     public String toString() {
         return "Mantenimiento{"
                 + "id=" + id
                 + ", idCamion=" + idCamion
                 + ", fecha=" + fecha
-                + ", tipo='" + tipo + '\''
+                + ", motivo='" + motivo + '\''
                 + ", descripcion='" + descripcion + '\''
-                + ", kilometraje=" + kilometraje
                 + '}';
     }
 }

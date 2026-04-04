@@ -114,7 +114,7 @@ public class VerHistorial extends javax.swing.JFrame {
             }
 
             bd.DAOMantenimiento dao = new bd.DAOMantenimiento();
-            java.util.List<model.Mantenimiento> lista = dao.findByCamionAll(idCamion);
+            java.util.List<model.Mantenimiento> lista = dao.encontrarTodos(idCamion);
 
             // Construir modelo de tabla
             javax.swing.table.DefaultTableModel modelTbl = new javax.swing.table.DefaultTableModel();

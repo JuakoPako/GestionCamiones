@@ -1,33 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package model;
 
 import java.util.Date;
 
-/**
- *
- * @author Franco
- */
 
 public class Alertas {
 
     private int id;
     private int id_camion;
     private Date fecha;
-    private String responsable;
-    private boolean atendida;
+    private String tipo;
 
     public Alertas() {
     }
 
-    public Alertas(int id, int id_camion, Date fecha, String responsable, boolean atendida) {
+    public Alertas(int id, int id_camion, Date fecha, String tipo) {
         this.id = id;
         this.id_camion = id_camion;
         this.fecha = fecha;
-        this.responsable = responsable;
-        this.atendida = atendida;
+        this.tipo = tipo;
     }
 
     public int getId() {
@@ -42,6 +33,10 @@ public class Alertas {
         return fecha;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -53,20 +48,8 @@ public class Alertas {
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
-    
-    public String getResponsable() {
-        return responsable;
-    }
 
-    public void setResponsable(String responsable) {
-        this.responsable = responsable;
-    }
-
-    public boolean isAtendida() {
-        return atendida;
-    }
-
-    public void setAtendida(boolean atendida) {
-        this.atendida = atendida;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 }

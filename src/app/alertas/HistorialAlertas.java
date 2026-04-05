@@ -7,7 +7,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 import java.util.List;
-
+import java.text.SimpleDateFormat;
 
 public class HistorialAlertas extends javax.swing.JFrame {
 
@@ -38,6 +38,12 @@ public class HistorialAlertas extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Ingrese la ID del camion:");
+
+        txtBuscarEntrada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscarEntradaActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Buscar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -99,17 +105,17 @@ public class HistorialAlertas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String txt = txtBuscarEntrada.getText().trim();
-        if (txt.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Ingrese la ID del camión para ver historial.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
-            txtBuscarEntrada.requestFocus();
+        String s = txtBuscarEntrada.getText().trim();
+        if (s.isEmpty()) {
+            // Si no se ingresa ID, cargar todo (según la vista actual)
+            cargarTablaHistorial(null);
             return;
         }
         try {
-            int idCamion = Integer.parseInt(txt);
-            refreshTableHistory(idCamion);
+            int idCamion = Integer.parseInt(s);
+            cargarTablaHistorial(idCamion);
         } catch (NumberFormatException nfe) {
-            javax.swing.JOptionPane.showMessageDialog(this, "La ID debe ser numérica.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "La ID del camión debe ser numérica.", "Validación", JOptionPane.WARNING_MESSAGE);
             txtBuscarEntrada.requestFocus();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -119,6 +125,10 @@ public class HistorialAlertas extends javax.swing.JFrame {
         gestionAlertas.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void txtBuscarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarEntradaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBuscarEntradaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -163,47 +173,33 @@ public class HistorialAlertas extends javax.swing.JFrame {
     private javax.swing.JTable tblAlertas;
     private javax.swing.JTextField txtBuscarEntrada;
     // End of variables declaration//GEN-END:variables
-// Método: refresca la tabla con TODO el historial del camión
 
-    private void refreshTableHistory(int idCamion) {
+    private void cargarTablaHistorial(Integer idCamion) {
+        if (daoA == null) {
+            JOptionPane.showMessageDialog(this, "DAOAlertas no inicializado.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         try {
-            if (daoA == null) daoA = new DAOAlertas();
+            // Asegúrate de que DAOAlertas tenga un método encontrarPorCamion(Integer)
             List<Alertas> lista = daoA.encontrarHistorialPorCamion(idCamion);
 
-            DefaultTableModel modelTbl = new DefaultTableModel(
-                    new Object[][]{}, new String[]{"ID", "ID Camión", "Fecha", "Tipo", "Responsable", "Atendida"}) {
+            DefaultTableModel model = new DefaultTableModel(
+                    new Object[]{"ID", "ID Camión", "Fecha", "Tipo"}, 0) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
                     return false;
                 }
-
-                @Override
-                public Class<?> getColumnClass(int columnIndex) {
-                    if (columnIndex == 0 || columnIndex == 1) return Integer.class;
-                    if (columnIndex == 5) return Boolean.class;
-                    return Object.class;
-                }
             };
 
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             for (Alertas a : lista) {
-                modelTbl.addRow(new Object[]{
-                    a.getId(),
-                    a.getId_camion(),
-                    a.getFecha(),
-                    a.getTipo(),
-                });
+                Object fecha = a.getFecha() != null ? sdf.format(a.getFecha()) : null;
+                model.addRow(new Object[]{a.getId(), a.getId_camion(), fecha, a.getTipo()});
             }
-
-            final javax.swing.table.TableModel tm = modelTbl;
-            javax.swing.SwingUtilities.invokeLater(() -> {
-                tblAlertas.setModel(tm);
-                tblAlertas.setAutoCreateRowSorter(true);
-            });
-
+            tblAlertas.setModel(model);
         } catch (SQLException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error al cargar historial: " + ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error al cargar historial: " + ex.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
     }
-
 }

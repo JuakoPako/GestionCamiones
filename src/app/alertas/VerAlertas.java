@@ -13,6 +13,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 import java.util.List;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -21,6 +22,7 @@ import java.util.List;
 public class VerAlertas extends javax.swing.JFrame {
 
     private DAOAlertas daoA;
+
     public VerAlertas() {
         initComponents();
         try {
@@ -122,102 +124,16 @@ public class VerAlertas extends javax.swing.JFrame {
     }//GEN-LAST:event_txtBuscarEntradaActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        String s = txtBuscarEntrada.getText().trim();
+        if (s.isEmpty()) {
+            cargarTablaUltimasAlertas(null);
+            return;
+        }
         try {
-            String filtro = txtBuscarEntrada.getText().trim();
-            if (filtro.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Ingrese la ID del camión.", "Validación", JOptionPane.WARNING_MESSAGE);
-                txtBuscarEntrada.requestFocus();
-                return;
-            }
-
-            int idCamion;
-            try {
-                idCamion = Integer.parseInt(filtro);
-            } catch (NumberFormatException nfe) {
-                JOptionPane.showMessageDialog(this, "La ID debe ser numérica.", "Validación", JOptionPane.WARNING_MESSAGE);
-                txtBuscarEntrada.requestFocus();
-                return;
-            }
-
-            // Obtener camión
-            DAOCamion daoCam = new DAOCamion();
-            Camion camion = daoCam.findById(idCamion);
-            if (camion == null) {
-                JOptionPane.showMessageDialog(this, "No existe camión con esa ID.", "Sin resultados", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-
-            Integer kmActual = camion.getKilometraje();
-            if (kmActual == null) {
-                kmActual = 0;
-            }
-
-            // Umbral para generar alerta por kilometraje
-            final int UMBRAL = 5000;
-
-            // Inicializar DAOAlertas si hace falta
-            if (daoA == null) {
-                daoA = new DAOAlertas();
-            }
-
-            // Si supera umbral, crear alerta tipo KILOMETRAJE si no existe una no atendida del mismo tipo
-            if (kmActual >= UMBRAL) {
-                boolean existeNoAtendida = false;
-                try {
-                    // Preferimos método por tipo para evitar duplicados por otros motivos
-                    existeNoAtendida = daoA.existeAlertaNoAtendidaPorTipo(idCamion, "KILOMETRAJE");
-                } catch (SQLException ex) {
-                    
-                }
-
-                if (!existeNoAtendida) {
-                    String patente = camion.getPatenteCamion();
-                    String responsableParaInsert = (patente != null && !patente.trim().isEmpty()) ? patente.trim() : "SIN_PATENTE";
-                    // Crear alerta del tipo KILOMETRAJE
-                    daoA.crearAlerta(idCamion, "KILOMETRAJE");
-                    JOptionPane.showMessageDialog(this,
-                            "Se creó una alerta automática por kilometraje (" + kmActual + " km).",
-                            "Alerta creada", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-
-            // Refrescar tabla con alertas del camión (incluye tipo)
-            List<Alertas> lista = daoA.encontrarPorCamion(idCamion, filtro);
-
-            DefaultTableModel modelTbl = new DefaultTableModel(
-                    new Object[][]{}, new String[]{"ID", "ID Camión", "Fecha", "Tipo", "Responsable", "Atendida"}) {
-                @Override
-                public boolean isCellEditable(int row, int column) {
-                    return false;
-                }
-
-                @Override
-                public Class<?> getColumnClass(int columnIndex) {
-                    if (columnIndex == 0 || columnIndex == 1) {
-                        return Integer.class;
-                    }
-                    if (columnIndex == 5) {
-                        return Boolean.class;
-                    }
-                    return Object.class;
-                }
-            };
-
-            for (Alertas a : lista) {
-                modelTbl.addRow(new Object[]{a.getId(), a.getId_camion(), a.getFecha(), a.getTipo()});
-            }
-
-            tblAlertas.setModel(modelTbl);
-            tblAlertas.setAutoCreateRowSorter(true);
-
-            if (lista.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "No hay alertas registradas para este camión. Kilometraje: " + kmActual + ".", "Sin alertas", JOptionPane.INFORMATION_MESSAGE);
-            }
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error BD: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error inesperado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            int idCamion = Integer.parseInt(s);
+            cargarTablaUltimasAlertas(idCamion);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ID de camión inválida.", "Validación", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
@@ -270,4 +186,31 @@ public class VerAlertas extends javax.swing.JFrame {
     private javax.swing.JTable tblAlertas;
     private javax.swing.JTextField txtBuscarEntrada;
     // End of variables declaration//GEN-END:variables
+private void cargarTablaUltimasAlertas(Integer idCamion) {
+        if (daoA == null) {
+            JOptionPane.showMessageDialog(this, "DAOAlertas no inicializado.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            List<Alertas> lista = daoA.encontrarUltimasPorTipoPorCamion(idCamion);
+
+            DefaultTableModel model = new DefaultTableModel(
+                    new Object[]{"ID", "ID Camión", "Fecha", "Tipo"}, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            for (Alertas a : lista) {
+                Object fecha = a.getFecha() != null ? sdf.format(a.getFecha()) : null;
+                model.addRow(new Object[]{a.getId(), a.getId_camion(), fecha, a.getTipo()});
+            }
+            tblAlertas.setModel(model);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar alertas: " + ex.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }
 }

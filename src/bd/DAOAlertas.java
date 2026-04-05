@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import model.Alertas;
+import java.sql.Statement;
 
 public class DAOAlertas {
 
@@ -157,5 +158,74 @@ public class DAOAlertas {
             }
         }
 
+    }
+
+    public boolean insertarAlertaTipoUnico(Connection conn, Alertas alerta) throws SQLException {
+        // 1) Comprobar existencia y bloquear la comprobación
+        String selectSql = "SELECT id FROM Alertas WHERE id_camion = ? AND tipo = ? LIMIT 1 FOR UPDATE";
+        try (PreparedStatement psSel = conn.prepareStatement(selectSql)) {
+            psSel.setInt(1, alerta.getId_camion());
+            psSel.setString(2, alerta.getTipo());
+            try (ResultSet rs = psSel.executeQuery()) {
+                if (rs.next()) {
+                    return false;
+                }
+            }
+        }
+
+        // 2) Insertar nueva alerta (no hay duplicado)
+        String insertSql = "INSERT INTO Alertas (id_camion, fecha, tipo) VALUES (?, ?, ?)";
+        try (PreparedStatement psIns = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
+            psIns.setInt(1, alerta.getId_camion());
+            if (alerta.getFecha() != null) {
+                psIns.setTimestamp(2, new java.sql.Timestamp(alerta.getFecha().getTime()));
+            } else {
+                psIns.setTimestamp(2, null);
+            }
+            psIns.setString(3, alerta.getTipo());
+            psIns.executeUpdate();
+            try (ResultSet keys = psIns.getGeneratedKeys()) {
+                if (keys.next()) {
+                    alerta.setId(keys.getInt(1));
+                }
+            }
+        }
+        return true;
+    }
+
+    public List<Alertas> encontrarUltimasPorTipoPorCamion(Integer idCamion) throws SQLException {
+        String sql
+                = "SELECT a.id, a.id_camion, a.fecha, a.tipo "
+                + "FROM Alertas a "
+                + "INNER JOIN ( "
+                + "  SELECT id_camion, tipo, MAX(id) AS maxid "
+                + "  FROM Alertas "
+                + (idCamion != null ? "  WHERE id_camion = ? " : "")
+                + "  GROUP BY id_camion, tipo "
+                + ") b ON a.id = b.maxid "
+                + "ORDER BY a.fecha DESC";
+
+        try (Connection conn = Conexion.getInstancia().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            if (idCamion != null) {
+                ps.setInt(1, idCamion);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Alertas> lista = new ArrayList<>();
+                while (rs.next()) {
+                    Alertas a = new Alertas();
+                    a.setId(rs.getInt("id"));
+                    a.setId_camion(rs.getInt("id_camion"));
+                    java.sql.Timestamp ts = rs.getTimestamp("fecha");
+                    if (ts != null) {
+                        a.setFecha(new java.util.Date(ts.getTime()));
+                    }
+                    a.setTipo(rs.getString("tipo"));
+                    lista.add(a);
+                }
+                return lista;
+            }
+        }
     }
 }

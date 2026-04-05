@@ -11,9 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Mantenimiento;
 
-/**
- * DAOMantenimiento seguro: usa Conexion.getInstancia(), PreparedStatement y try-with-resources.
- */
+
 public class DAOMantenimiento {
 
     private Conexion oConexion;
@@ -29,10 +27,7 @@ public class DAOMantenimiento {
         return s.replace("'", "''");
     }
 
-    /**
-     * Inserta un mantenimiento de forma no transaccional (abre su propia conexión).
-     * Mantiene compatibilidad con el método antiguo crearMantenimiento.
-     */
+
     public void crearMantenimiento(Mantenimiento m) throws SQLException {
         if (m == null) throw new SQLException("Objeto Mantenimiento nulo.");
 

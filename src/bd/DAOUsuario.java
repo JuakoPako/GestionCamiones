@@ -17,7 +17,7 @@ import model.Usuario;
  */
 public class DAOUsuario {
 
-    private Conexion oConexion;
+    private ConexionBD oConexion;
 
 
     /*
@@ -25,7 +25,7 @@ public class DAOUsuario {
      Genera la conexion entregando los datos
      */
     public DAOUsuario() throws SQLException {
-        oConexion = new Conexion("localhost", "gestion_camiones", "root", "1997");
+        oConexion = new ConexionBD("localhost", "gestion_camiones", "root", "1997");
     }
 
     public void crearUsuario(Usuario oUsuario) throws SQLException {

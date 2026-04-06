@@ -1,6 +1,6 @@
 package app.mantenimiento;
 
-import bd.Conexion;
+import bd.ConexionBD;
 import bd.DAOAlertas;
 import bd.DAOMantenimiento;
 import java.sql.SQLException;
@@ -199,7 +199,7 @@ public class RegistroMantenimiento extends javax.swing.JFrame {
             m.setFecha(fechaUtil);
             m.setMotivo(motivo.toUpperCase());
             m.setDescripcion(descripcion);
-            Conexion cx = Conexion.getInstancia();
+            ConexionBD cx = ConexionBD.getInstancia();
             try (java.sql.Connection conn = cx.getConnection()) {
                 try {
                     conn.setAutoCommit(false);

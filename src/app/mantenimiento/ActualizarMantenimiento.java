@@ -1,6 +1,6 @@
 package app.mantenimiento;
 
-import bd.Conexion;
+import bd.ConexionBD;
 import bd.DAOMantenimiento;
 import java.sql.SQLException;
 import java.util.List;

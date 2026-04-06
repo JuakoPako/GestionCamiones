@@ -13,10 +13,10 @@ import java.sql.Statement;
 
 public class DAOAlertas {
 
-    private Conexion oConexion;
+    private ConexionBD oConexion;
 
     public DAOAlertas() throws SQLException {
-        oConexion = Conexion.getInstancia();
+        oConexion = ConexionBD.getInstancia();
     }
 
     private String escape(String s) {
@@ -205,7 +205,7 @@ public class DAOAlertas {
                 + ") b ON a.id = b.maxid "
                 + "ORDER BY a.fecha DESC";
 
-        try (Connection conn = Conexion.getInstancia().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConexionBD.getInstancia().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             if (idCamion != null) {
                 ps.setInt(1, idCamion);

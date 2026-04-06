@@ -10,10 +10,10 @@ import model.Camion;
 
 public class DAOCamion {
 
-    private Conexion oConexion;
+    private ConexionBD oConexion;
 
     public DAOCamion() throws SQLException {
-        oConexion = new Conexion("localhost", "gestion_camiones", "root", "1997");
+        oConexion = new ConexionBD("localhost", "gestion_camiones", "root", "1997");
     }
 
     public void crearCamion(Camion oCamion) throws SQLException {

@@ -14,10 +14,10 @@ import model.Mantenimiento;
 
 public class DAOMantenimiento {
 
-    private Conexion oConexion;
+    private ConexionBD oConexion;
 
     public DAOMantenimiento() throws SQLException {
-        oConexion = Conexion.getInstancia();
+        oConexion = ConexionBD.getInstancia();
     }
 
     private String escape(String s) {

@@ -29,8 +29,14 @@ public class VerHistorial extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel1.setText("Ingrese la ID del camion:");
 
+        txtBuscar.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+
+        btnBuscar.setBackground(new java.awt.Color(100, 149, 237));
+        btnBuscar.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        btnBuscar.setForeground(new java.awt.Color(242, 235, 227));
         btnBuscar.setText("Buscar");
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -38,6 +44,7 @@ public class VerHistorial extends javax.swing.JFrame {
             }
         });
 
+        btnVolver.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         btnVolver.setText("Volver");
         btnVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -45,6 +52,7 @@ public class VerHistorial extends javax.swing.JFrame {
             }
         });
 
+        tblMantenimientos.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         tblMantenimientos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -87,7 +95,7 @@ public class VerHistorial extends javax.swing.JFrame {
                     .addComponent(btnVolver))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(243, Short.MAX_VALUE))
+                .addContainerGap(118, Short.MAX_VALUE))
         );
 
         pack();

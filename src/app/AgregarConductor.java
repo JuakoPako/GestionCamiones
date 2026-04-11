@@ -76,9 +76,10 @@ public class AgregarConductor extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lblTitulo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblTitulo.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
         lblTitulo.setText("AGREGAR CONDUCTOR");
 
+        tblConductores.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         tblConductores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -92,6 +93,11 @@ public class AgregarConductor extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tblConductores);
 
+        txtNombre.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+
+        txtCorreo.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+
+        cmbRol.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         cmbRol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CONDUCTOR", "ADMIN" }));
         cmbRol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -99,14 +105,19 @@ public class AgregarConductor extends javax.swing.JFrame {
             }
         });
 
+        lblNombre.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         lblNombre.setText("Nombre");
 
+        lblCorreo.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         lblCorreo.setText("Correo");
 
+        lblContra.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         lblContra.setText("Contraseña");
 
+        lblRol.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         lblRol.setText("Rol");
 
+        btnVolver.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         btnVolver.setText("Volver");
         btnVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -114,12 +125,18 @@ public class AgregarConductor extends javax.swing.JFrame {
             }
         });
 
+        btnOk.setBackground(new java.awt.Color(100, 149, 237));
+        btnOk.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        btnOk.setForeground(new java.awt.Color(242, 235, 227));
         btnOk.setText("Agregar");
+        btnOk.setBorderPainted(false);
         btnOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOkActionPerformed(evt);
             }
         });
+
+        pswContra.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -128,28 +145,27 @@ public class AgregarConductor extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(65, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(166, 166, 166)
-                        .addComponent(lblTitulo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtNombre)
-                            .addComponent(txtCorreo)
-                            .addComponent(cmbRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblNombre)
-                            .addComponent(lblCorreo)
-                            .addComponent(lblContra)
-                            .addComponent(lblRol)
-                            .addComponent(btnOk)
-                            .addComponent(pswContra, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
-                        .addGap(55, 55, 55)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(53, 53, 53))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(btnVolver)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(lblTitulo)
+                        .addGap(259, 259, 259))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnVolver)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txtNombre)
+                                        .addComponent(txtCorreo)
+                                        .addComponent(cmbRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lblNombre)
+                                        .addComponent(lblCorreo)
+                                        .addComponent(lblContra)
+                                        .addComponent(lblRol)
+                                        .addComponent(pswContra, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
+                                    .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(55, 55, 55)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(53, 53, 53))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,9 +193,9 @@ public class AgregarConductor extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnOk))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                 .addComponent(btnVolver)
-                .addGap(16, 16, 16))
+                .addGap(29, 29, 29))
         );
 
         pack();

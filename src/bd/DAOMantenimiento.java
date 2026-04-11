@@ -92,9 +92,6 @@ public class DAOMantenimiento {
         }
     }
 
-    /**
-     * Buscar por id (no transaccional).
-     */
     public Mantenimiento encontrarPorId(int id) throws SQLException {
         String sql = "SELECT id, id_camion, fecha, motivo, descripcion FROM Mantenimiento WHERE id = ? LIMIT 1";
         try (Connection conn = oConexion.getConnection();
@@ -201,10 +198,6 @@ public class DAOMantenimiento {
         }
     }
 
-    /**
-     * Inserta mantenimiento usando la Connection proporcionada (transaccional).
-     * Mantiene la firma que ya tenías.
-     */
     public void insertarMantenimiento(Connection conn, Mantenimiento m) throws SQLException {
         String sql = "INSERT INTO Mantenimiento (id_camion, fecha, motivo, descripcion, id_alerta_original) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {

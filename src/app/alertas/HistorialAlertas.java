@@ -37,14 +37,19 @@ public class HistorialAlertas extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel1.setText("Ingrese la ID del camion:");
 
+        txtBuscarEntrada.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         txtBuscarEntrada.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtBuscarEntradaActionPerformed(evt);
             }
         });
 
+        jButton1.setBackground(new java.awt.Color(0, 102, 255));
+        jButton1.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(242, 235, 227));
         jButton1.setText("Buscar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -52,6 +57,7 @@ public class HistorialAlertas extends javax.swing.JFrame {
             }
         });
 
+        tblAlertas.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         tblAlertas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null}
@@ -62,6 +68,7 @@ public class HistorialAlertas extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tblAlertas);
 
+        jButton2.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         jButton2.setText("Volver");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

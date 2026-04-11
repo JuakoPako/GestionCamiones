@@ -48,34 +48,53 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel1.setText("Ingrese la ID del camion:");
 
+        txtBuscar.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+
+        btnBuscar.setBackground(new java.awt.Color(100, 149, 237));
+        btnBuscar.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        btnBuscar.setForeground(new java.awt.Color(242, 235, 227));
         btnBuscar.setText("Buscar");
+        btnBuscar.setBorderPainted(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);
             }
         });
 
+        jLabel2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel2.setText("Ingrese los datos:");
 
+        jLabel3.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         jLabel3.setText("Fecha del mantenimiento");
 
+        jLabel5.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         jLabel5.setText("Descripcion");
 
+        jLabel6.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         jLabel6.setText("Kilometraje");
 
         txtDescripcion.setColumns(20);
+        txtDescripcion.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         txtDescripcion.setRows(5);
         jScrollPane2.setViewportView(txtDescripcion);
 
+        txtKilometraje.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+
+        btnGuardar.setBackground(new java.awt.Color(100, 149, 237));
+        btnGuardar.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(242, 235, 227));
         btnGuardar.setText("Guardar");
+        btnGuardar.setBorderPainted(false);
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuardarActionPerformed(evt);
             }
         });
 
+        btnVolver.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         btnVolver.setText("Volver");
         btnVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -83,15 +102,18 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
             }
         });
 
+        jLabel4.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         jLabel4.setText("Tipo de mantenimiento");
 
-        cbTipoMantenimiento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Preventino", "Correctivo" }));
+        cbTipoMantenimiento.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        cbTipoMantenimiento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kilometraje", "Comustible bajo" }));
         cbTipoMantenimiento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbTipoMantenimientoActionPerformed(evt);
             }
         });
 
+        tblMantenimientos.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         tblMantenimientos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -113,7 +135,6 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
                 .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 573, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -134,7 +155,8 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnGuardar)
                         .addGap(18, 18, 18)
-                        .addComponent(btnVolver)))
+                        .addComponent(btnVolver))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -173,7 +195,7 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
                     .addComponent(btnVolver))
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pack();
@@ -195,7 +217,6 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
                 limpiarFormularioActualizar();
                 return;
             }
-            // Cargar en formulario
             selectedIdMantenimiento = m.getId();
             if (m.getFecha() != null) {
                 jDateChooser1.setDate(m.getFecha());
@@ -204,13 +225,11 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
             }
             cbTipoMantenimiento.setSelectedItem(m.getMotivo());
             txtDescripcion.setText(m.getDescripcion() != null ? m.getDescripcion() : "");
-            // Si tu modelo tiene kilometraje, adapta:
             try {
                 java.lang.reflect.Method gm = Mantenimiento.class.getMethod("getKilometraje");
                 Object km = gm.invoke(m);
                 txtKilometraje.setText(km != null ? String.valueOf(km) : "");
             } catch (NoSuchMethodException nsme) {
-                // modelo no tiene kilometraje; ignorar
                 txtKilometraje.setText("");
             } catch (Exception ex) {
                 txtKilometraje.setText("");
@@ -226,50 +245,95 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // Validación básica: debe existir un mantenimiento seleccionado
-        if (selectedIdMantenimiento == null) {
-            JOptionPane.showMessageDialog(this, "Primero busque y seleccione un mantenimiento.", "Validación", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
         try {
-            // Leer campos del formulario (ajusta nombres si usas otros componentes)
-            java.util.Date fecha = jDateChooser1.getDate(); // o jdcFecha
+            if (selectedIdMantenimiento == null) {
+                JOptionPane.showMessageDialog(this, "Primero busque y seleccione un mantenimiento.", "Validación", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            java.util.Date fecha = jDateChooser1.getDate();
             String motivo = (String) cbTipoMantenimiento.getSelectedItem();
             String descripcion = txtDescripcion.getText().trim();
 
-            // Validaciones simples
             if (motivo == null || motivo.trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Seleccione un motivo.", "Validación", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Construir modelo
+            // Construir objeto mantenimiento con los datos del formulario
             model.Mantenimiento m = new model.Mantenimiento();
             m.setId(selectedIdMantenimiento);
             m.setFecha(fecha);
             m.setMotivo(motivo);
             m.setDescripcion(descripcion);
 
-            // Llamada simple al DAO (no transaccional)
-            bd.DAOMantenimiento dao = new bd.DAOMantenimiento();
-            dao.actualizarMantenimiento(m);
+            // Abrir conexión y usar transacción
+            try (java.sql.Connection conn = bd.ConexionBD.getInstancia().getConnection()) {
+                conn.setAutoCommit(false);
+                try {
+                    // 1) Obtener id_camion asociado al mantenimiento (si no lo tienes en el formulario)
+                    Integer idCamion = null;
+                    try (java.sql.PreparedStatement ps = conn.prepareStatement(
+                            "SELECT id_camion FROM Mantenimiento WHERE id = ?")) {
+                        ps.setInt(1, m.getId());
+                        try (java.sql.ResultSet rs = ps.executeQuery()) {
+                            if (rs.next()) {
+                                idCamion = rs.getInt("id_camion");
+                            } else {
+                                throw new java.sql.SQLException("Mantenimiento no encontrado (id=" + m.getId() + ")");
+                            }
+                        }
+                    }
 
-            JOptionPane.showMessageDialog(this, "Mantenimiento actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    try (java.sql.PreparedStatement ps = conn.prepareStatement(
+                            "UPDATE Mantenimiento SET fecha = ?, motivo = ?, descripcion = ? WHERE id = ?")) {
+                        // convertir java.util.Date a java.sql.Date o Timestamp según tu columna
+                        java.sql.Date sqlDate = new java.sql.Date(m.getFecha().getTime());
+                        ps.setDate(1, sqlDate);
+                        ps.setString(2, m.getMotivo());
+                        ps.setString(3, m.getDescripcion());
+                        ps.setInt(4, m.getId());
+                        ps.executeUpdate();
+                    }
 
-            // Opcional: refrescar tabla y limpiar formulario
-            cargarTablaMantenimientos(); // si tienes este método
-            limpiarFormularioActualizar();
+                    // 3) Borrar todas las alertas del camión (id_camion)
+                    try (java.sql.PreparedStatement ps = conn.prepareStatement(
+                            "DELETE FROM Alertas WHERE id_camion = ?")) {
+                        ps.setInt(1, idCamion);
+                        int deleted = ps.executeUpdate();
+                        System.out.println("Alertas borradas: " + deleted);
+                    }
+
+                    // 4) Commit si todo OK
+                    conn.commit();
+
+                    JOptionPane.showMessageDialog(this, "Mantenimiento actualizado correctamente. Alertas del camión eliminadas.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    cargarTablaMantenimientos();
+                    limpiarFormularioActualizar();
+
+                } catch (Exception innerEx) {
+                    // Rollback ante cualquier fallo
+                    try {
+                        conn.rollback();
+                    } catch (Exception rbEx) {
+                        rbEx.printStackTrace();
+                    }
+                    throw innerEx;
+                } finally {
+                    conn.setAutoCommit(true);
+                }
+            }
 
         } catch (NumberFormatException nfe) {
             JOptionPane.showMessageDialog(this, "Valor numérico inválido.", "Validación", JOptionPane.WARNING_MESSAGE);
-        } catch (SQLException sqle) {
+        } catch (java.sql.SQLException sqle) {
             JOptionPane.showMessageDialog(this, "Error BD al actualizar: " + sqle.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
             sqle.printStackTrace();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error inesperado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
+
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void cbTipoMantenimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoMantenimientoActionPerformed
@@ -368,7 +432,6 @@ private String escape(String s) {
             }
             tblMantenimientos.setModel(model);
         } catch (SQLException ex) {
-            // no bloquear la UI; solo log y mensaje
             JOptionPane.showMessageDialog(this, "Error al cargar tabla: " + ex.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }

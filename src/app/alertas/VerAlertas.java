@@ -52,14 +52,19 @@ public class VerAlertas extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel1.setText("Ingrese la ID del camion:");
 
+        txtBuscarEntrada.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         txtBuscarEntrada.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtBuscarEntradaActionPerformed(evt);
             }
         });
 
+        btnBuscar.setBackground(new java.awt.Color(0, 102, 255));
+        btnBuscar.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        btnBuscar.setForeground(new java.awt.Color(242, 235, 227));
         btnBuscar.setText("Buscar");
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -67,6 +72,7 @@ public class VerAlertas extends javax.swing.JFrame {
             }
         });
 
+        tblAlertas.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         tblAlertas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null}
@@ -77,6 +83,7 @@ public class VerAlertas extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tblAlertas);
 
+        btnVolver.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         btnVolver.setText("Volver");
         btnVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

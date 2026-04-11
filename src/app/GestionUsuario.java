@@ -38,29 +38,43 @@ public class GestionUsuario extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        lblUsuario.setFont(new java.awt.Font("Roboto Medium", 0, 18)); // NOI18N
         lblUsuario.setText("Gestion de Usuarios");
 
+        btnAgregarCamion.setBackground(new java.awt.Color(100, 149, 237));
+        btnAgregarCamion.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        btnAgregarCamion.setForeground(new java.awt.Color(242, 235, 227));
         btnAgregarCamion.setText("Registrar Conductor");
+        btnAgregarCamion.setBorderPainted(false);
         btnAgregarCamion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgregarCamionActionPerformed(evt);
             }
         });
 
+        btnActualizarConductor.setBackground(new java.awt.Color(100, 149, 237));
+        btnActualizarConductor.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        btnActualizarConductor.setForeground(new java.awt.Color(242, 235, 227));
         btnActualizarConductor.setText("Actualizar Conductor");
+        btnActualizarConductor.setBorderPainted(false);
         btnActualizarConductor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnActualizarConductorActionPerformed(evt);
             }
         });
 
+        btnEliminarConductor.setBackground(new java.awt.Color(100, 149, 237));
+        btnEliminarConductor.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        btnEliminarConductor.setForeground(new java.awt.Color(242, 235, 227));
         btnEliminarConductor.setText("Eliminar Conductor");
+        btnEliminarConductor.setBorderPainted(false);
         btnEliminarConductor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarConductorActionPerformed(evt);
             }
         });
 
+        btnCerrarSesion.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         btnCerrarSesion.setText("Volver");
         btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -73,34 +87,30 @@ public class GestionUsuario extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(69, 69, 69)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(btnAgregarCamion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnActualizarConductor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnEliminarConductor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(268, 268, 268)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblUsuario)
-                            .addComponent(btnCerrarSesion))))
-                .addContainerGap(268, Short.MAX_VALUE))
+                    .addComponent(btnCerrarSesion)
+                    .addComponent(lblUsuario)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btnAgregarCamion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnActualizarConductor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnEliminarConductor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(410, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(43, 43, 43)
+                .addGap(44, 44, 44)
                 .addComponent(lblUsuario)
-                .addGap(47, 47, 47)
-                .addComponent(btnAgregarCamion)
-                .addGap(34, 34, 34)
-                .addComponent(btnActualizarConductor)
-                .addGap(36, 36, 36)
-                .addComponent(btnEliminarConductor)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
+                .addGap(59, 59, 59)
+                .addComponent(btnAgregarCamion, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(56, 56, 56)
+                .addComponent(btnActualizarConductor, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(59, 59, 59)
+                .addComponent(btnEliminarConductor, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(56, 56, 56)
                 .addComponent(btnCerrarSesion)
-                .addGap(38, 38, 38))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         pack();

@@ -42,8 +42,12 @@ public class VerCamiones extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel1.setText("Ingrese su patente:");
 
+        txtBuscarPatente.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+
+        tblTablaCamiones.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         tblTablaCamiones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
@@ -57,13 +61,18 @@ public class VerCamiones extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tblTablaCamiones);
 
+        btnBuscar.setBackground(new java.awt.Color(100, 149, 237));
+        btnBuscar.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        btnBuscar.setForeground(new java.awt.Color(242, 235, 227));
         btnBuscar.setText("Buscar");
+        btnBuscar.setBorderPainted(false);
         btnBuscar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnBuscarMouseClicked(evt);
             }
         });
 
+        btnVolver.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         btnVolver.setText("Volver");
         btnVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -81,8 +90,8 @@ public class VerCamiones extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtBuscarPatente, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtBuscarPatente, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnBuscar)
                         .addGap(18, 18, 18)

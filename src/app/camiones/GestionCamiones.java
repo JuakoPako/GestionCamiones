@@ -37,16 +37,25 @@ public class GestionCamiones extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        lblUsuario.setFont(new java.awt.Font("Roboto Medium", 0, 18)); // NOI18N
         lblUsuario.setText("Gestion de Camiones");
 
+        btnAgregarCamion.setBackground(new java.awt.Color(100, 149, 237));
+        btnAgregarCamion.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        btnAgregarCamion.setForeground(new java.awt.Color(242, 235, 227));
         btnAgregarCamion.setText("Agregar Camion");
+        btnAgregarCamion.setBorderPainted(false);
         btnAgregarCamion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgregarCamionActionPerformed(evt);
             }
         });
 
+        btnVerCamiones.setBackground(new java.awt.Color(100, 149, 237));
+        btnVerCamiones.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        btnVerCamiones.setForeground(new java.awt.Color(242, 235, 227));
         btnVerCamiones.setText("Ver Camiones");
+        btnVerCamiones.setBorderPainted(false);
         btnVerCamiones.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnVerCamionesMouseClicked(evt);
@@ -58,20 +67,29 @@ public class GestionCamiones extends javax.swing.JFrame {
             }
         });
 
+        btnActualizarCamion.setBackground(new java.awt.Color(100, 149, 237));
+        btnActualizarCamion.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        btnActualizarCamion.setForeground(new java.awt.Color(242, 235, 227));
         btnActualizarCamion.setText("Actualizar Camion");
+        btnActualizarCamion.setBorderPainted(false);
         btnActualizarCamion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnActualizarCamionActionPerformed(evt);
             }
         });
 
+        btnEliminarCamion.setBackground(new java.awt.Color(100, 149, 237));
+        btnEliminarCamion.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        btnEliminarCamion.setForeground(new java.awt.Color(242, 235, 227));
         btnEliminarCamion.setText("Eliminar Camion");
+        btnEliminarCamion.setBorderPainted(false);
         btnEliminarCamion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarCamionActionPerformed(evt);
             }
         });
 
+        btnCerrarSesion.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         btnCerrarSesion.setText("Volver");
         btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -84,37 +102,33 @@ public class GestionCamiones extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(69, 69, 69)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(btnAgregarCamion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnActualizarCamion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnEliminarCamion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnVerCamiones, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(268, 268, 268)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblUsuario)
-                            .addComponent(btnCerrarSesion))))
-                .addContainerGap(260, Short.MAX_VALUE))
+                    .addComponent(btnCerrarSesion)
+                    .addComponent(lblUsuario)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btnAgregarCamion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnActualizarCamion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnEliminarCamion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVerCamiones, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(339, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(43, 43, 43)
+                .addGap(44, 44, 44)
                 .addComponent(lblUsuario)
-                .addGap(47, 47, 47)
-                .addComponent(btnAgregarCamion)
-                .addGap(37, 37, 37)
-                .addComponent(btnVerCamiones)
-                .addGap(37, 37, 37)
-                .addComponent(btnActualizarCamion)
-                .addGap(37, 37, 37)
-                .addComponent(btnEliminarCamion)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
+                .addGap(49, 49, 49)
+                .addComponent(btnAgregarCamion, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addComponent(btnVerCamiones, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addComponent(btnActualizarCamion, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
+                .addComponent(btnEliminarCamion, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48)
                 .addComponent(btnCerrarSesion)
-                .addGap(38, 38, 38))
+                .addGap(39, 39, 39))
         );
 
         pack();

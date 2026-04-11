@@ -77,7 +77,7 @@ public class SimuladorTemperatura {
 
         double nueva = actual + cambio;
 
-        // límites
+        
         if (nueva < 60) {
             nueva = 60;
         }

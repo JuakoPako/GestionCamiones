@@ -221,46 +221,41 @@ public class ActualizarCamiones extends javax.swing.JFrame {
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         try {
             String idStr = txtBuscarEntrada.getText().trim();
+
             if (idStr.isEmpty()) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Ingrese la ID del camión.", "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
                 txtBuscarEntrada.requestFocus();
                 return;
             }
 
-            int idBuscado;
+            int id;
             try {
-                idBuscado = Integer.parseInt(idStr);
-            } catch (NumberFormatException nfe) {
+                id = Integer.parseInt(idStr);
+            } catch (NumberFormatException e) {
                 javax.swing.JOptionPane.showMessageDialog(this, "ID inválida. Debe ser un número entero.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 txtBuscarEntrada.requestFocus();
                 return;
             }
 
             DAOCamion dao = new DAOCamion();
-            List<model.Camion> lista = dao.getCamiones(idStr);
+            model.Camion c = dao.findById(id); 
 
-            model.Camion encontrado = null;
-            for (model.Camion c : lista) {
-                if (c.getIdCamion() == idBuscado) {
-                    encontrado = c;
-                    break;
-                }
-            }
-
-            if (encontrado == null) {
+            if (c == null) {
                 poblarTablaConCamion(null);
                 limpiarCamposEntrada();
                 javax.swing.JOptionPane.showMessageDialog(this, "No se encontró un camión con esa ID.", "No encontrado", javax.swing.JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
-            poblarTablaConCamion(encontrado);
+            // Mostrar en tabla
+            poblarTablaConCamion(c);
 
-            txtPatenteEntrada.setText(encontrado.getPatenteCamion() == null ? "" : encontrado.getPatenteCamion());
-            txtMarcaEntrada.setText(encontrado.getMarca() == null ? "" : encontrado.getMarca());
-            txtModeloEntrada.setText(encontrado.getModelo() == null ? "" : encontrado.getModelo());
-            txtAñoEntrada.setText(String.valueOf(encontrado.getAnio()));
-            txtKilometroajeEntrada.setText(String.valueOf(encontrado.getKilometraje()));
+            // Cargar en inputs
+            txtPatenteEntrada.setText(c.getPatenteCamion() == null ? "" : c.getPatenteCamion());
+            txtMarcaEntrada.setText(c.getMarca() == null ? "" : c.getMarca());
+            txtModeloEntrada.setText(c.getModelo() == null ? "" : c.getModelo());
+            txtAñoEntrada.setText(String.valueOf(c.getAnio()));
+            txtKilometroajeEntrada.setText(String.valueOf(c.getKilometraje()));
 
         } catch (SQLException ex) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error al buscar: " + ex.getMessage(), "Error BD", javax.swing.JOptionPane.ERROR_MESSAGE);

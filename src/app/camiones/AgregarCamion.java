@@ -194,36 +194,45 @@ public class AgregarCamion extends javax.swing.JFrame {
 
         if (patente.isEmpty()) {
             mostrarError(txtPatente, "La patente es obligatoria");
+            JOptionPane.showMessageDialog(null, "La patente es obligatoria", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!patente.matches("^[A-Z0-9-]{4,8}$")) {
             mostrarError(txtPatente, "Patente inválida (solo letras, números y guión, 4-8 caracteres)");
+            JOptionPane.showMessageDialog(null, "Patente inválida (solo letras, números y guión, 4-8 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (marca.length() > 50) {
             mostrarError(txtMarca, "Marca demasiado larga (máx. 50 caracteres)");
+            JOptionPane.showMessageDialog(null, "Marca demasiado larga (máx. 50 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (modelo.length() > 50) {
             mostrarError(txtModelo, "Modelo demasiado largo (máx. 50 caracteres)");
+            JOptionPane.showMessageDialog(null, "Modelo demasiado largo (máx. 50 caracteres)", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (anioStr.isEmpty()) {
             mostrarError(txtAno, "El año es obligatorio");
+            JOptionPane.showMessageDialog(null, "El año es obligatorio", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+
         int anio;
         try {
             anio = Integer.parseInt(anioStr);
         } catch (NumberFormatException e) {
             mostrarError(txtAno, "Año debe ser un número entero");
+            JOptionPane.showMessageDialog(null, "Año debe ser un número entero", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+
         int anioActual = java.time.Year.now().getValue();
         if (anio < 1900 || anio > anioActual + 1) {
             mostrarError(txtAno, "Año fuera de rango (" + 1900 + " - " + (anioActual + 1) + ")");
+            JOptionPane.showMessageDialog(null, "Año fuera de rango (" + 1900 + " - " + (anioActual + 1) + ")", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -295,6 +304,8 @@ public class AgregarCamion extends javax.swing.JFrame {
 
             JOptionPane.showMessageDialog(this, "Camión agregado correctamente. ID: " + nuevo.getIdCamion(),
                     "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            GestionCamiones gestioncamiones = new GestionCamiones();
+            gestioncamiones.setVisible(true);
             this.dispose();
 
         } catch (NumberFormatException nfe) {

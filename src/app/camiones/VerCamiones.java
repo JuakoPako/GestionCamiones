@@ -22,6 +22,7 @@ public class VerCamiones extends javax.swing.JFrame {
      */
     public VerCamiones() {
         initComponents();
+        cargarTabla("");
     }
 
     /**

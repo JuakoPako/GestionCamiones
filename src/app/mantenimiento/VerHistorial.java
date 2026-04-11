@@ -14,6 +14,7 @@ public class VerHistorial extends javax.swing.JFrame {
      */
     public VerHistorial() {
         initComponents();
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -170,6 +171,7 @@ private void cargarTablaMantenimientos(Integer idCamion) {
         try {
             DAOMantenimiento dao = new DAOMantenimiento();
             List<Mantenimiento> lista = dao.encontrarTodos(idCamion);
+
             DefaultTableModel model = new DefaultTableModel(
                     new Object[]{"ID", "ID Camión", "Fecha", "Motivo", "Descripción"}, 0) {
                 @Override
@@ -178,8 +180,24 @@ private void cargarTablaMantenimientos(Integer idCamion) {
                 }
             };
 
+            //  SI NO HAY RESULTADOS
+            if (lista.isEmpty()) {
+                tblMantenimientos.setModel(model);
+
+                if (idCamion == null) {
+                    JOptionPane.showMessageDialog(this, "No hay mantenimientos registrados.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se encontraron mantenimientos para ese camión.", "Sin resultados", JOptionPane.INFORMATION_MESSAGE);
+                }
+                return;
+            }
+
+            //  SI HAY DATOS
             for (Mantenimiento m : lista) {
-                Object fecha = m.getFecha() != null ? new java.text.SimpleDateFormat("yyyy-MM-dd").format(m.getFecha()) : null;
+                Object fecha = m.getFecha() != null
+                        ? new java.text.SimpleDateFormat("yyyy-MM-dd").format(m.getFecha())
+                        : null;
+
                 model.addRow(new Object[]{
                     m.getId(),
                     m.getIdCamion(),
@@ -188,7 +206,9 @@ private void cargarTablaMantenimientos(Integer idCamion) {
                     m.getDescripcion()
                 });
             }
+
             tblMantenimientos.setModel(model);
+
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar historial: " + ex.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();

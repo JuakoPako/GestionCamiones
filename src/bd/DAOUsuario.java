@@ -20,7 +20,7 @@ public class DAOUsuario {
      Genera la conexion entregando los datos
      */
     public DAOUsuario() throws SQLException {
-        oConexion = new ConexionBD("localhost", "gestion_camiones", "root", "1997");
+        oConexion = new ConexionBD("localhost", "gestion_camiones", "root", "");
     }
 
     public void crearUsuario(Usuario oUsuario) throws SQLException {

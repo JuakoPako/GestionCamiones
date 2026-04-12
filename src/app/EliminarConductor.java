@@ -26,6 +26,7 @@ public class EliminarConductor extends javax.swing.JFrame {
     public EliminarConductor() {
         initComponents();
         MostrarUsuariosEnTabla();
+        this.setLocationRelativeTo(null);
     }
     
     public void MostrarUsuariosEnTabla() {

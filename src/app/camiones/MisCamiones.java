@@ -21,7 +21,7 @@ import model.Sesion;
  * @author bevod
  */
 public class MisCamiones extends javax.swing.JFrame {
-    
+
     private Timer refresco;
 
     public MisCamiones() {
@@ -47,6 +47,7 @@ public class MisCamiones extends javax.swing.JFrame {
         });
 
         refresco.start();
+        this.setLocationRelativeTo(null);
     }
 
     private void MostrarCamionesEnTabla() throws SQLException {
@@ -272,7 +273,6 @@ public class MisCamiones extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(MisCamiones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

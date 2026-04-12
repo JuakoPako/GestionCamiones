@@ -30,6 +30,7 @@ public class EliminarCamion extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(EliminarCamion.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.setLocationRelativeTo(null);
         
     }
 

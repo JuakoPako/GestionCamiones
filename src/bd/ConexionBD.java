@@ -42,7 +42,7 @@ public class ConexionBD {
             String server = "localhost";
             String bd = "gestion_camiones";
             String user = "root";
-            String pass = "";
+            String pass = "1997";
             instancia = new ConexionBD(server, bd, user, pass);
         }
         return instancia;

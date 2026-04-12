@@ -25,6 +25,7 @@ public class AgregarConductor extends javax.swing.JFrame {
     public AgregarConductor() {
         initComponents();
         mostrarUsuariosEnTabla();
+        this.setLocationRelativeTo(null);
     }
     
     private void mostrarUsuariosEnTabla() {

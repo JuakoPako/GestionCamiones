@@ -21,7 +21,7 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
 
     public ActualizarMantenimiento() {
         initComponents();
-
+        this.setLocationRelativeTo(null);
     }
 
     @SuppressWarnings("unchecked")
@@ -49,7 +49,7 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jLabel1.setText("Ingrese la ID del camion:");
+        jLabel1.setText("Ingrese la ID del mantenimiento:");
 
         txtBuscar.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
 
@@ -156,7 +156,7 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
                         .addComponent(btnGuardar)
                         .addGap(18, 18, 18)
                         .addComponent(btnVolver))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -225,6 +225,7 @@ public class ActualizarMantenimiento extends javax.swing.JFrame {
             }
             cbTipoMantenimiento.setSelectedItem(m.getMotivo());
             txtDescripcion.setText(m.getDescripcion() != null ? m.getDescripcion() : "");
+            JOptionPane.showMessageDialog(this, "Actualiza los datos");
             try {
                 java.lang.reflect.Method gm = Mantenimiento.class.getMethod("getKilometraje");
                 Object km = gm.invoke(m);

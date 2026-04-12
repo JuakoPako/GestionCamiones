@@ -14,7 +14,7 @@ public class VerHistorial extends javax.swing.JFrame {
      */
     public VerHistorial() {
         initComponents();
-        
+        this.setLocationRelativeTo(null);
     }
 
     @SuppressWarnings("unchecked")
@@ -39,6 +39,7 @@ public class VerHistorial extends javax.swing.JFrame {
         btnBuscar.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         btnBuscar.setForeground(new java.awt.Color(242, 235, 227));
         btnBuscar.setText("Buscar");
+        btnBuscar.setBorderPainted(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);

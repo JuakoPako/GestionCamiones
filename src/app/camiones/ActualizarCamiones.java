@@ -19,6 +19,7 @@ public class ActualizarCamiones extends javax.swing.JFrame {
      */
     public ActualizarCamiones() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**

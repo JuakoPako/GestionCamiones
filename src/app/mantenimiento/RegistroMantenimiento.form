@@ -41,7 +41,7 @@
                                   <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="cbTipoMantenimiento" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jdcFecha" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jdcFecha" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="118" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -235,6 +235,11 @@
       </Events>
     </Component>
     <Component class="com.toedter.calendar.JDateChooser" name="jdcFecha">
+      <Properties>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+        </Property>
+      </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>

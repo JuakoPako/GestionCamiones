@@ -27,6 +27,7 @@ public class ActualizarConductor extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(ActualizarConductor.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.setLocationRelativeTo(null);
     }
 
     private void mostrarUsuariosEnTabla() throws SQLException {

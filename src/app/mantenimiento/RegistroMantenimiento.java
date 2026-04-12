@@ -5,16 +5,19 @@ import bd.DAOAlertas;
 import bd.DAOMantenimiento;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import model.Alertas;
+import model.Mantenimiento;
 
 public class RegistroMantenimiento extends javax.swing.JFrame {
 
     private Integer alertaIdSeleccionada = null;
 
     public RegistroMantenimiento() {
-
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     @SuppressWarnings("unchecked")
@@ -99,6 +102,8 @@ public class RegistroMantenimiento extends javax.swing.JFrame {
             }
         });
 
+        jdcFecha.setForeground(new java.awt.Color(255, 255, 255));
+
         tblMantenimientos.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         tblMantenimientos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -134,7 +139,7 @@ public class RegistroMantenimiento extends javax.swing.JFrame {
                                     .addComponent(jLabel3)
                                     .addComponent(jLabel4)
                                     .addComponent(cbTipoMantenimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jdcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jdcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(118, 118, 118)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -201,7 +206,6 @@ public class RegistroMantenimiento extends javax.swing.JFrame {
             }
             int idAlerta = alertaIdSeleccionada;
 
-            // Leer campos del formulario
             java.util.Date fechaUtil = (jdcFecha != null && jdcFecha.getDate() != null) ? jdcFecha.getDate() : new java.util.Date();
             String motivo = (String) cbTipoMantenimiento.getSelectedItem();
             String descripcion = txtDescripcion.getText().trim();
@@ -233,7 +237,6 @@ public class RegistroMantenimiento extends javax.swing.JFrame {
                     limpiarFormulario();
                 } catch (Exception ex) {
                     conn.rollback();
-                    // Si el DELETE devolvió 0 filas, DAOAlertas lanza SQLException y cae aquí
                     String msg = ex.getMessage() != null ? ex.getMessage() : "Error desconocido";
                     JOptionPane.showMessageDialog(this, "Error al registrar mantenimiento: " + msg, "Error", JOptionPane.ERROR_MESSAGE);
                     ex.printStackTrace();
@@ -248,6 +251,7 @@ public class RegistroMantenimiento extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error BD: " + sqle.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             sqle.printStackTrace();
         }
+        cargarTablaMantenimientos();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -267,6 +271,8 @@ public class RegistroMantenimiento extends javax.swing.JFrame {
                 alertaIdSeleccionada = null;
                 btnGuardar.setEnabled(false);
                 return;
+            } else {
+                JOptionPane.showMessageDialog(this, "Ingrese los datos");
             }
 
             alertaIdSeleccionada = alerta.getId();
@@ -274,10 +280,8 @@ public class RegistroMantenimiento extends javax.swing.JFrame {
             String tipoAlerta = alerta.getTipo();
             if ("KILOMETRAJE".equalsIgnoreCase(tipoAlerta)) {
                 cbTipoMantenimiento.setSelectedItem("KILOMETRAJE");
-                txtDescripcion.setText("Mantenimiento por kilometraje: revisar frenos, aceite, filtros.");
             } else if ("COMBUSTIBLE_BAJO".equalsIgnoreCase(tipoAlerta)) {
                 cbTipoMantenimiento.setSelectedItem("COMBUSTIBLE_BAJO");
-                txtDescripcion.setText("Revisión del sistema de combustible y llenado.");
             } else {
                 cbTipoMantenimiento.setSelectedItem(tipoAlerta);
                 txtDescripcion.setText("Mantenimiento relacionado con alerta: " + tipoAlerta);
@@ -385,6 +389,56 @@ public class RegistroMantenimiento extends javax.swing.JFrame {
         cbTipoMantenimiento.setSelectedIndex(0);
         alertaIdSeleccionada = null;
         btnGuardar.setEnabled(false);
+    }
+
+    private void cargarTablaMantenimientos() {
+        try {
+            DAOMantenimiento dao = new DAOMantenimiento();
+            // Trae todos los mantenimientos (sin filtro por idCamion)
+            List<Mantenimiento> lista = dao.encontrarTodos(null);
+
+            DefaultTableModel model = new DefaultTableModel(
+                    new Object[]{"ID", "ID Camión", "Fecha", "Motivo", "Descripción"}, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+
+            // Si no hay resultados
+            if (lista == null || lista.isEmpty()) {
+                tblMantenimientos.setModel(model);
+                JOptionPane.showMessageDialog(this,
+                        "No hay mantenimientos registrados.",
+                        "Información",
+                        JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            // Si hay datos
+            for (Mantenimiento m : lista) {
+                Object fecha = m.getFecha() != null
+                        ? new java.text.SimpleDateFormat("yyyy-MM-dd").format(m.getFecha())
+                        : null;
+
+                model.addRow(new Object[]{
+                    m.getId(),
+                    m.getIdCamion(),
+                    fecha,
+                    m.getMotivo(),
+                    m.getDescripcion()
+                });
+            }
+
+            tblMantenimientos.setModel(model);
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al cargar mantenimientos: " + ex.getMessage(),
+                    "Error BD",
+                    JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
     }
 
 }

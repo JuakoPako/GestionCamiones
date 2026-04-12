@@ -32,6 +32,7 @@ public class VerAlertas extends javax.swing.JFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
             daoA = null;
         }
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -62,10 +63,11 @@ public class VerAlertas extends javax.swing.JFrame {
             }
         });
 
-        btnBuscar.setBackground(new java.awt.Color(0, 102, 255));
+        btnBuscar.setBackground(new java.awt.Color(100, 149, 237));
         btnBuscar.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         btnBuscar.setForeground(new java.awt.Color(242, 235, 227));
         btnBuscar.setText("Buscar");
+        btnBuscar.setBorderPainted(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);

@@ -34,6 +34,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         
         SimuladorKilometraje.iniciar();
         SimuladorTemperatura.iniciar();
+        this.setLocationRelativeTo(null);
 
     }
 
@@ -58,10 +59,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         btnAlertas = new javax.swing.JButton();
         btnCerrarSesion = new javax.swing.JButton();
         btnMisCamiones = new javax.swing.JButton();
+        lblIconoMenu = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lblUsuario.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
+        lblUsuario.setFont(new java.awt.Font("Roboto Medium", 0, 18)); // NOI18N
         lblUsuario.setText("BIENVENIDO");
 
         btnGestionUsuarios.setBackground(new java.awt.Color(100, 149, 237));
@@ -125,6 +127,8 @@ public class MenuPrincipal extends javax.swing.JFrame {
             }
         });
 
+        lblIconoMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/‌icono_menu.png"))); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -144,8 +148,10 @@ public class MenuPrincipal extends javax.swing.JFrame {
                             .addComponent(btnMantenimiento, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnAlertas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnGestionUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 184, Short.MAX_VALUE)
-                        .addComponent(btnMisCamiones)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 224, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnMisCamiones, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblIconoMenu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(109, 109, 109))))
         );
         layout.setVerticalGroup(
@@ -160,12 +166,15 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 .addGap(48, 48, 48)
                 .addComponent(btnGestionCamiones, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(45, 45, 45)
-                .addComponent(btnMantenimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addComponent(btnAlertas, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnMantenimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(44, 44, 44)
+                        .addComponent(btnAlertas, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblIconoMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(45, 45, 45)
                 .addComponent(btnCerrarSesion)
-                .addGap(38, 38, 38))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         pack();
@@ -252,6 +261,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnGestionUsuarios;
     private javax.swing.JButton btnMantenimiento;
     private javax.swing.JButton btnMisCamiones;
+    private javax.swing.JLabel lblIconoMenu;
     private javax.swing.JLabel lblUsuario;
     // End of variables declaration//GEN-END:variables
 }

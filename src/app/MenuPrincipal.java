@@ -27,6 +27,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         if (Sesion.haySesion()) {
             configurarSegunUsuario();
+            
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, "Debe iniciar sesión");
             this.dispose();
@@ -43,9 +44,13 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         lblUsuario.setText("Bienvenido " + u.getNombre());
 
-        btnMisCamiones.setVisible(
-                u.getRol().equalsIgnoreCase("conductor")
-        );
+        boolean esConductor = u.getRol().equalsIgnoreCase("conductor");
+
+        btnMisCamiones.setVisible(esConductor);
+
+// estos deberían ser para admin (o no conductor)
+        btnGestionUsuarios.setEnabled(!esConductor);
+        btnGestionCamiones.setEnabled(!esConductor);
     }
 
     @SuppressWarnings("unchecked")
